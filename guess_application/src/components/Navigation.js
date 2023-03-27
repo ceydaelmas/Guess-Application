@@ -6,8 +6,14 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import WelcomeScreen from '../screens/WelcomeScreen';
 import {AuthContext} from '../context/AuthContext';
+import AddMarketScreen from '../screens/AddMarketScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import NotificationScreen from '../screens/NotificationScreen';
+import SearchScreen from '../screens/SearchScreen';
 import SplashScreen from '../screens/SplashScreen.js';
+import Tabs from '../navigation/tabs';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,20 +22,16 @@ const Navigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        {splashLoading ? (
-          <Stack.Screen
-            name="Splash Screen"
-            component={SplashScreen}
-            options={{headerShown: false}}
-          />
-        ) : userInfo.access_token ? (
-          <Stack.Screen name="Home" component={LoginScreen} />
-        ) : (
-          <>
+      {/* buraya initialrouteName ekleyince ilk sayfayı belirleyebilirsin */}
+      <Stack.Navigator initialRouteName='Welcome'>
+      <Stack.Screen
+        name="Welcome"
+        component={WelcomeScreen}
+        options={{headerShown: false}}
+        />
             <Stack.Screen
               name="Login"
-              component={HomeScreen}
+              component={LoginScreen}
               options={{headerShown: false}}
             />
             <Stack.Screen
@@ -37,8 +39,37 @@ const Navigation = () => {
               component={RegisterScreen}
               options={{headerShown: false}}
             />
-          </>
-        )}
+               <Stack.Screen name="Home" component={HomeScreen} />
+               <Stack.Screen
+              name="Tabs"
+              component={Tabs}
+              options={{headerShown: false}}
+            />
+               <Stack.Screen
+              name="AddMarket"
+              component={AddMarketScreen}
+              options={{headerShown: false}}
+            />
+              <Stack.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{headerShown: false}}
+            />
+                <Stack.Screen
+              name="Notification"
+              component={NotificationScreen}
+              options={{headerShown: false}}
+            />
+
+            <Stack.Screen
+              name="Search"
+              component={SearchScreen}
+              options={{headerShown: false}}
+            />
+        
+
+        
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

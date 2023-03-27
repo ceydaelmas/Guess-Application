@@ -1,16 +1,16 @@
 import React, {useContext} from 'react';
 import {View,Text,Button,StyleSheet} from 'react-native';
-const HomeScreen = ({navigation}) => {
+const ProfileScreen = ({navigation}) => {
     return(
         <View styles={styles.container}>
-            <Text>Home Screen</Text>
+            <Text>Profile Screen</Text>
             <Button title="Click Here"
 >
             </Button>
         </View>
     )
 }
-export default HomeScreen;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
     container:{

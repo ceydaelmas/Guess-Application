@@ -1,16 +1,16 @@
 import React, {useContext} from 'react';
 import {View,Text,Button,StyleSheet} from 'react-native';
-const HomeScreen = ({navigation}) => {
+const AddMarketScreen = ({navigation}) => {
     return(
         <View styles={styles.container}>
-            <Text>Home Screen</Text>
+            <Text>Add Market Screen</Text>
             <Button title="Click Here"
 >
             </Button>
         </View>
     )
 }
-export default HomeScreen;
+export default AddMarketScreen;
 
 const styles = StyleSheet.create({
     container:{

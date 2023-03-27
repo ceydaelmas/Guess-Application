@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
   const register =  async(firstName,lastName, email,userName,password,confirmPassword) => {
     setIsLoading(true);
@@ -22,7 +23,7 @@ export const AuthProvider = ({children}) => {
         setIsLoading(false);
         console.log(userInfo);
       }) .catch(e => {
-        console.error(`register error ${e}`);
+        console.error(JSON.stringify(e.response.data));
         setIsLoading(false);
       });
   };
@@ -30,6 +31,7 @@ export const AuthProvider = ({children}) => {
 
   const login = (email, password) => {
     setIsLoading(true);
+    setIsLogged(false);
 
     axios
       .post(`${BASE_URL}/Account/authenticate`, {
@@ -38,14 +40,16 @@ export const AuthProvider = ({children}) => {
       })
       .then(res => {
         let userInfo = res.data;
-        console.log(userInfo);
+        console.log(userInfo.succeeded);
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
+        setIsLogged(true);
       })
       .catch(e => {
-        console.log(`login error ${e}`);
+        console.error(JSON.stringify(e.response.data));
         setIsLoading(false);
+        setIsLogged(false);
       });
   };
 
@@ -101,6 +105,7 @@ export const AuthProvider = ({children}) => {
         splashLoading,
         register,
         login,
+        isLogged
       }}>
       {children}
     </AuthContext.Provider>
