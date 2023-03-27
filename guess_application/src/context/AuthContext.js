@@ -8,13 +8,24 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isLogged, setIsLogged] = useState(false);
   const [splashLoading, setSplashLoading] = useState(false);
-  const register =  async(firstName,lastName, email,userName,password,confirmPassword) => {
+  const register = async (
+    firstName,
+    lastName,
+    email,
+    userName,
+    password,
+    confirmPassword,
+  ) => {
     setIsLoading(true);
     await axios
       .post(`${BASE_URL}/Account/register`, {
-        firstName,lastName, email,userName,password,confirmPassword
+        firstName,
+        lastName,
+        email,
+        userName,
+        password,
+        confirmPassword,
       })
       .then(res => {
         let userInfo = res.data;
@@ -22,16 +33,15 @@ export const AuthProvider = ({children}) => {
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
         console.log(userInfo);
-      }) .catch(e => {
+      })
+      .catch(e => {
         console.error(JSON.stringify(e.response.data));
         setIsLoading(false);
       });
   };
 
-
-  const login = (email, password) => {
+  const login = (email, password,navigation) => {
     setIsLoading(true);
-    setIsLogged(false);
 
     axios
       .post(`${BASE_URL}/Account/authenticate`, {
@@ -40,45 +50,47 @@ export const AuthProvider = ({children}) => {
       })
       .then(res => {
         let userInfo = res.data;
-        console.log(userInfo.succeeded);
+        console.log(userInfo);
         setUserInfo(userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
         setIsLoading(false);
-        setIsLogged(true);
+        navigation.navigate('Tabs');
       })
-      .catch(e => {
+      .catch(e => { 
+        navigation.navigate('Login');
         console.error(JSON.stringify(e.response.data));
         setIsLoading(false);
-        setIsLogged(false);
       });
   };
 
-  // const logout = () => {
-  //   setIsLoading(true);
-  //   axios
-  //     .post(
-  //       `${BASE_URL}/logout`,
-  //       {},
-  //       {
-  //         headers: {Authorization: `Bearer ${userInfo.access_token}`},
-  //       },
-  //     )
-  //     .then(res => {
-  //       console.log(res.data);
-  //       AsyncStorage.removeItem('userInfo');
-  //       setUserInfo({});
-  //       setIsLoading(false);
-  //     })
-  //     .catch(e => {
-  //       console.log(`logout error ${e}`);
-  //       setIsLoading(false);
-  //     });
-  // };
+  const logout = (navigation) => {
+    setIsLoading(true);
+    axios
+      .post(
+        `${BASE_URL}/Account/logout`,
+        {},
+        {
+          headers: {Authorization: `Bearer ${userInfo.data.jwToken}`},
+        },
+      )
+      .then(res => {
+        console.log(res.data);
+        AsyncStorage.removeItem('userInfo');
+        navigation.navigate('Welcome');
+        setUserInfo({});
+        setIsLoading(false);
+        
+      })
+      .catch(e => {
+        console.log(`logout error ${e}`);
+        setIsLoading(false);
+      });
+  };
 
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
-      
+
       let userInfo = await AsyncStorage.getItem('userInfo');
       userInfo = JSON.parse(userInfo);
 
@@ -89,7 +101,7 @@ export const AuthProvider = ({children}) => {
       setSplashLoading(false);
     } catch (e) {
       setSplashLoading(false);
-      console.log(`is logged in error ${e}`);
+      console.log(`is logged in error ${JSON.stringify(e.response.data)}`);
     }
   };
 
@@ -105,7 +117,7 @@ export const AuthProvider = ({children}) => {
         splashLoading,
         register,
         login,
-        isLogged
+        logout
       }}>
       {children}
     </AuthContext.Provider>

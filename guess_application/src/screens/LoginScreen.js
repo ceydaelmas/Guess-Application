@@ -20,7 +20,7 @@ import AppTextInput from '../components/AppTextInput';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const {isLoading, login,isLogged} = useContext(AuthContext);
+  const {isLoading, login} = useContext(AuthContext);
   return (
     <SafeAreaView>
       <View
@@ -95,11 +95,8 @@ const LoginScreen = ({navigation}) => {
             elevation: 12,
           }}
           onPress={() => {
-            login(email, password);
-            {!isLogged? (
-             navigation.navigate('Login')):
-            (navigation.navigate('Home'))
-          }}}>
+            login(email, password,navigation);
+          }}>
           <Text
             style={{
               fontFamily: 'Poppins-SemiBold',

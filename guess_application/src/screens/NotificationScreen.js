@@ -4,6 +4,9 @@ const NotificationScreen = ({navigation}) => {
     return(
         <View styles={styles.container}>
             <Text>Notification Screen</Text>
+            <Button title="Click Here"
+>
+            </Button>
         </View>
     )
 }
