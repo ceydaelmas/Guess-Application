@@ -23,53 +23,27 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       {/* buraya initialrouteName ekleyince ilk sayfayı belirleyebilirsin */}
-      <Stack.Navigator initialRouteName='Welcome'>
-      <Stack.Screen
-        name="Welcome"
-        component={WelcomeScreen}
-        options={{headerShown: false}}
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen
+          name="Welcome"
+          component={WelcomeScreen}
+          options={{headerShown: false}}
         />
-            <Stack.Screen
-              name="Login"
-              component={LoginScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="Register"
-              component={RegisterScreen}
-              options={{headerShown: false}}
-            />
-               <Stack.Screen name="Home" component={HomeScreen} />
-               <Stack.Screen
-              name="Tabs"
-              component={Tabs}
-              options={{headerShown: false}}
-            />
-               <Stack.Screen
-              name="AddMarket"
-              component={AddMarketScreen}
-              options={{headerShown: false}}
-            />
-              <Stack.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={{headerShown: false}}
-            />
-                <Stack.Screen
-              name="Notification"
-              component={NotificationScreen}
-              options={{headerShown: false}}
-            />
-
-            <Stack.Screen
-              name="Search"
-              component={SearchScreen}
-              options={{headerShown: false}}
-            />
-        
-
-        
-        
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Tabs}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

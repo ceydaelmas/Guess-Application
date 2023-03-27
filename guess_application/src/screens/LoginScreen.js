@@ -96,10 +96,10 @@ const LoginScreen = ({navigation}) => {
           }}
           onPress={() => {
             login(email, password);
-            // {!isLogged? (
-            //  navigation.navigate('Login')):
+            {!isLogged? (
+             navigation.navigate('Login')):
             (navigation.navigate('Home'))
-          }}>
+          }}}>
           <Text
             style={{
               fontFamily: 'Poppins-SemiBold',
