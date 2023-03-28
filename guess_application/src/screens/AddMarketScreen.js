@@ -7,6 +7,8 @@ import {
   View,
   StyleSheet,
   Picker,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -17,20 +19,38 @@ import {AuthContext} from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppTextInput from '../components/AppTextInput';
 import Dropdown from '../components/Dropdown';
+import AddSource from '../components/AddSource';
 const items = [
-  { id: 1, name: 'Ceyda' },
-  { id: 2, name: 'ARzu' },
-  { id: 3, name: 'aras' },
-  { id: 4, name: 'ceylin' },
-  { id: 5, name: 'hey' },
+  {id: 1, name: 'Ceyda'},
+  {id: 2, name: 'ARzu'},
+  {id: 3, name: 'aras'},
+  {id: 4, name: 'ceylin'},
+  {id: 5, name: 'hey'},
 ];
 const AddMarketScreen = ({navigation}) => {
   const [stockName, setStockName] = useState(null);
   const [stockDescription, setStockDescription] = useState(null);
-  const {isLoading, login} = useContext(AuthContext);
+  //tags
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
+  const {isLoading} = useContext(AuthContext);
 
+  const deleteTag = tag => {
+    setTags(tags.filter(t => t !== tag));
+  };
+
+  const addTag = () => {
+    const newTags = tagInput
+      .split(',')
+      .map(t => t.trim())
+      .filter(t => t !== '');
+    setTags([...tags, ...newTags]);
+    setTagInput('');
+  };
+
+  
   return (
-
+    <ScrollView>
       <SafeAreaView>
         <View
           style={{
@@ -48,7 +68,7 @@ const AddMarketScreen = ({navigation}) => {
                 fontFamily: 'Poppins-Bold',
                 marginVertical: Spacing * 2,
               }}>
-              Piyasa Ekle
+              Piyasa Oluştur
             </Text>
             <Text
               style={{
@@ -85,62 +105,96 @@ const AddMarketScreen = ({navigation}) => {
               value={stockDescription}
               onChangeText={text => setStockDescription(text)}
             />
-            <Dropdown items={items} />
+            <Text
+              style={{
+                fontFamily: 'Poppins-Regular',
+              }}>
+              Categoriler
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'Poppins-Regular',
+              }}>
+              Senetler
+            </Text>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {tags.map(tag => (
+                <View
+                  key={tag}
+                  style={{
+                    backgroundColor: Colors.primary,
+                    borderRadius: 4,
+                    paddingHorizontal: 8,
+                    paddingVertical: 4,
+                    marginRight: 8,
+                    marginBottom: 8,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: Colors.gray, marginRight: 4}}>
+                    {tag}
+                  </Text>
+                  <TouchableOpacity onPress={() => deleteTag(tag)}>
+                    <Ionicons
+                      name="close-circle-outline"
+                      color={Colors.gray}
+                      size={16}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+            <View>
+              <AppTextInput
+                value={tagInput}
+                onChangeText={setTagInput}
+                onSubmitEditing={addTag}
+                placeholder="Senet Ekle"
+              />
+            </View>
+            {/* source */}
+            <Text
+              style={{
+                fontFamily: 'Poppins-Regular',
+              }}>
+              Kaynaklar
+            </Text>
+            <AddSource></AddSource>
           </View>
 
-          <View
+          <TouchableOpacity
             style={{
-              marginVertical: Spacing * 3,
+              padding: Spacing * 1,
+              backgroundColor: Colors.primary,
+              marginVertical: Spacing * 2,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.5,
+              elevation: 12,
+            }}
+            onPress={() => {
+              login(email, password, navigation);
             }}>
             <Text
               style={{
                 fontFamily: 'Poppins-SemiBold',
-                color: Colors.primary,
+                color: Colors.onPrimary,
                 textAlign: 'center',
-                fontSize: FontSize.small,
+                fontSize: FontSize.large,
               }}>
-              Ya da
+              Oluştur
             </Text>
-            <View
-              style={{
-                marginTop: Spacing,
-                flexDirection: 'row',
-                justifyContent: 'center',
-              }}>
-              <TouchableOpacity
-                style={{
-                  padding: Spacing,
-                  backgroundColor: Colors.darkGray,
-                  borderRadius: Spacing / 2,
-                  marginHorizontal: Spacing,
-                }}>
-                <Ionicons
-                  name="logo-google"
-                  color={Colors.text}
-                  size={Spacing * 2}
-                />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  padding: Spacing,
-                  backgroundColor: Colors.darkGray,
-                  borderRadius: Spacing / 2,
-                  marginHorizontal: Spacing,
-                }}>
-                <Ionicons
-                  name="logo-facebook"
-                  color={Colors.text}
-                  size={Spacing * 2}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
-  
+    </ScrollView>
   );
 };
+
 export default AddMarketScreen;
 
 const styles = StyleSheet.create({
