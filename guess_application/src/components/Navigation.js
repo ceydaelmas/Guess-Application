@@ -23,7 +23,7 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       {/* buraya initialrouteName ekleyince ilk sayfayı belirleyebilirsin */}
-      <Stack.Navigator initialRouteName="Welcome">
+      <Stack.Navigator initialRouteName="Tabs">
         <Stack.Screen
           name="Welcome"
           component={WelcomeScreen}
