@@ -1,42 +1,35 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
-  Button,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  StyleSheet,
-  Picker,
-  ScrollView,
-  FlatList,
 } from 'react-native';
-import Spinner from 'react-native-loading-spinner-overlay';
-import {SafeAreaView} from 'react-native-safe-area-context';
+
 import Colors from '../constants/Colors';
-import FontSize from '../constants/FontSize';
+
 import Spacing from '../constants/Spacing';
-import {AuthContext} from '../context/AuthContext';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import AppTextInput from '../components/AppTextInput';
-import Dropdown from '../components/Dropdown';
+
 const AddSource = ({navigation}) => {
   //source
-  const [passengers, setPassengers] = useState(['']);
+  const [stocks, setStocks] = useState(['']);
   const [errors, setErrors] = useState([]);
   const [focused, setFocused] = useState(false);
+  
   //source
   const handleRemoveError = index => {
     const newErrors = [...errors];
     newErrors.splice(index, 1);
     setErrors(newErrors);
   };
-  const handleAddPassenger = () => {
-    if (passengers.length < 3) {
-      setPassengers([...passengers, '']);
+  const handleAddStock = () => {
+    if (stocks.length < 3) {
+      setStocks([...stocks, '']);
     } else {
-      // validate passengers
+      // validate stocks
       const newErrors = [];
-      newErrors.push('You cannot add more than 3 sources.');
+      newErrors.push('3"ten fazla kaynak ekleyemezsin.');
 
       setErrors([...errors, ...newErrors]);
       // remove errors after 5 seconds
@@ -48,43 +41,43 @@ const AddSource = ({navigation}) => {
     }
   };
 
-  const handleRemovePassenger = index => {
-    setPassengers([
-      ...passengers.slice(0, index),
-      ...passengers.slice(index + 1),
+  const handleRemoveStock = index => {
+    setStocks([
+      ...stocks.slice(0, index),
+      ...stocks.slice(index + 1),
     ]);
   };
 
   const handleInputChange = (index, value) => {
-    setPassengers([
-      ...passengers.slice(0, index),
+    setStocks([
+      ...stocks.slice(0, index),
       value,
-      ...passengers.slice(index + 1),
+      ...stocks.slice(index + 1),
     ]);
   };
 
   const handleSubmit = () => {
-    if (passengers.length < 1) {
-      setErrors(['At least 1 passengers']);
+    if (stocks.length < 1) {
+      setErrors(['En az 1 kaynak eklemek zorundasın']);
       return;
     }
 
-    // Handle form submission with passengers array
-    console.log('Passengers:', passengers);
+    // Handle form submission with stock array
+    console.log('Stocks:', stocks);
   };
   return (
     <View style={{maxWidth: 600}}>
       <TouchableOpacity
        onFocus={() => setFocused(true)}
        onBlur={() => setFocused(false)}
-        onPress={handleAddPassenger}
+        onPress={handleAddStock}
         style={[{
-          marginVertical: Spacing,
+          marginBottom: Spacing *2,
           borderRadius: Spacing,
           borderStyle: 'dashed',
           borderWidth: 1,
           borderColor: '#ccc',
-          padding: Spacing * 1.5,
+          padding: Spacing,
         },focused && {
             borderWidth: 2,
             borderColor: Colors.primary,
@@ -101,7 +94,7 @@ const AddSource = ({navigation}) => {
             color: '#999',
             fontSize: 20,
           }}>
-          + Add Source
+          + Kaynak Ekle
         </Text>
       </TouchableOpacity>
       {errors.map((error, index) => (
@@ -109,7 +102,7 @@ const AddSource = ({navigation}) => {
           {error}
         </Text>
       ))}
-      {passengers.map((passenger, index) => (
+      {stocks.map((stock, index) => (
         <View
           key={index}
           style={{
@@ -119,14 +112,15 @@ const AddSource = ({navigation}) => {
           }}>
           <View style={{flex: 1, marginBottom: -20}}>
             <AppTextInput
-              value={passenger}
+              value={stock}
               onChangeText={value => handleInputChange(index, value)}
-              placeholder="Source"
+              placeholder="Kaynak"
             />
           </View>
-          {passengers.length > 1 && (
+          {stocks.length > 1 && (
             <TouchableOpacity
-              onPress={() => handleRemovePassenger(index)}
+              
+              onPress={() => handleRemoveStock(index)}
               style={{marginLeft: 10}}>
               <Text style={{color: '#999', fontSize: 24}}>&ndash;</Text>
             </TouchableOpacity>

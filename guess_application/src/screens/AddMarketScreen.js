@@ -9,6 +9,7 @@ import {
   Picker,
   ScrollView,
   FlatList,
+  Platform,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -19,7 +20,9 @@ import {AuthContext} from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppTextInput from '../components/AppTextInput';
 import Dropdown from '../components/Dropdown';
+
 import AddSource from '../components/AddSource';
+import DateTimePicker from '@react-native-community/datetimepicker';
 const items = [
   {id: 1, name: 'Ceyda'},
   {id: 2, name: 'ARzu'},
@@ -30,11 +33,41 @@ const items = [
 const AddMarketScreen = ({navigation}) => {
   const [stockName, setStockName] = useState(null);
   const [stockDescription, setStockDescription] = useState(null);
-  //tags
+  {/* Senet ekleme */}
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
+  {/* Piyasa kapanma tarihi ekleme */}
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [textDate, setDateText] = useState('Tarih');
+  const [textTime, setTimeText] = useState('Saat');
+  const currentDate = new Date();
   const {isLoading} = useContext(AuthContext);
+     {/* Piyasa kapanma tarihi ekleme */}
+  const onChange = (event, selectedDate) => {
+    setShow(false);
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+    let tempDate = new Date(currentDate);
+    let fDate =
+      tempDate.getDate() +
+      '/' +
+      (tempDate.getMonth() + 1) +
+      '/' +
+      tempDate.getFullYear();
+    let fTime = tempDate.getHours() + ':' + tempDate.getMinutes();
 
+    setDateText(fDate);
+    setTimeText(fTime);
+  };
+
+  const showMode = currentMode => {
+    setShow(true);
+    setMode(currentMode);
+  };
+ 
+   {/* Senet ekleme */}
   const deleteTag = tag => {
     setTags(tags.filter(t => t !== tag));
   };
@@ -48,7 +81,6 @@ const AddMarketScreen = ({navigation}) => {
     setTagInput('');
   };
 
-  
   return (
     <ScrollView>
       <SafeAreaView>
@@ -82,6 +114,7 @@ const AddMarketScreen = ({navigation}) => {
             style={{
               marginVertical: Spacing * 2,
             }}>
+            {/* Piyasa adı ekleme */}
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
@@ -92,6 +125,7 @@ const AddMarketScreen = ({navigation}) => {
               value={stockName}
               onChangeText={text => setStockName(text)}
             />
+            {/* Piyasa açıklaması ekleme */}
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
@@ -105,15 +139,19 @@ const AddMarketScreen = ({navigation}) => {
               value={stockDescription}
               onChangeText={text => setStockDescription(text)}
             />
+            {/* Kategori ekleme */}
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
+                marginVertical: Spacing * 2,
               }}>
-              Categoriler
+              Kategoriler
             </Text>
+            {/* Senet ekleme */}
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
+                marginVertical: Spacing * 2,
               }}>
               Senetler
             </Text>
@@ -152,14 +190,74 @@ const AddMarketScreen = ({navigation}) => {
                 placeholder="Senet Ekle"
               />
             </View>
-            {/* source */}
+            {/* Piyasa kaynağı ekleme */}
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
+                marginVertical: Spacing * 2
               }}>
               Kaynaklar
             </Text>
             <AddSource></AddSource>
+            {/* Piyasa kapanış tarihi ekleme */}
+            <Text
+              style={{
+                fontFamily: 'Poppins-Regular',
+                marginVertical: Spacing * 2
+              }}>
+              Piyasa Kapanış Tarihi
+            </Text>
+            <View flexDirection="row">
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  borderStyle: 'dashed',
+                  borderWidth: 2,
+                  padding: 15,
+                  borderColor: Colors.darkGray,
+                  borderRadius: Spacing,
+                }}
+                onPress={() => showMode('date')}>
+                <Text
+                  style={{
+                    fontSize: FontSize.small,
+                    fontFamily: 'Poppins-Regular',
+                    textAlign: 'center',
+                  }}>
+                  {textDate}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flex: 1,
+                  borderStyle: 'dashed',
+                  borderWidth: 2,
+                  padding: 15,
+                  borderColor: Colors.darkGray,
+                  borderRadius: Spacing,
+                }}
+                onPress={() => showMode('time')}>
+                <Text
+                  style={{
+                    fontSize: FontSize.small,
+                    fontFamily: 'Poppins-Regular',
+                    textAlign: 'center',
+                  }}>
+                  {textTime}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {show && (
+              <DateTimePicker
+                testId="dateTimePicker"
+                minimumDate={currentDate}
+                value={date}
+                mode={mode}
+                is24Hour={true}
+                display="default"
+                onChange={onChange}
+              />
+            )}
           </View>
 
           <TouchableOpacity
