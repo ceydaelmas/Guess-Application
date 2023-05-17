@@ -7,6 +7,7 @@ import SearchScreen from '../screens/SearchScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AddMarketScreen from '../screens/AddMarketScreen';
 import Colors from '../constants/Colors';
+import Spacing from '../constants/Spacing';
 
 const Tab = createBottomTabNavigator();
 const CustomTabBarButton = ({children, onPress}) => (
@@ -20,28 +21,30 @@ const CustomTabBarButton = ({children, onPress}) => (
     onPress={onPress}>
     <View
       style={{
-        width: 60,
-        height: 60,
+        width: 65,
+        height: 65,
         borderRadius: 35,
-        backgroundColor: '#e32f45',
+        backgroundColor: Colors.borderWithOpacity,
+        ...styles.shadow,
       }}>
       {children}
     </View>
   </TouchableOpacity>
 );
-const Tabs = () => {
+const Tabs = ({navigation}) => {
+
   return (
     <Tab.Navigator
       screenOptions={{
         showLabel: false,
         tabBarStyle: {
           position: 'absolute',
-          bottom: 25,
-          left: 20,
-          right: 20,
+          bottom: 0,
+          left: 0,
+          right: 0,
           elevation: 5,
           backgroundColor: '#ffffff',
-          borderRadius: 15,
+          borderRadius: 0,
           height: 80,
           ...styles.shadow,
         },
@@ -49,6 +52,7 @@ const Tabs = () => {
       }}>
       <Tab.Screen
         name="Home"
+        onPress={() => navigation.navigate('Home')}
         component={HomeScreen}
         options={{
           tabBarIcon: ({focused}) => (
@@ -61,7 +65,7 @@ const Tabs = () => {
                   width: 28,
                   height: 28,
                   marginBottom: 12,
-                  tintColor: focused ? '#e32f45' : '#748c94',
+                  tintColor: focused ? Colors.borderWithOpacity : '#748c94',
                 }}
               />
             </View>
@@ -69,7 +73,7 @@ const Tabs = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#e32f45' : '#748c94',
+                color: focused ? '#1f41bb' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -81,6 +85,7 @@ const Tabs = () => {
       />
       <Tab.Screen
         name="Search"
+        onPress={() => navigation.navigate('Search')}
         component={SearchScreen}
         options={{
           tabBarIcon: ({focused}) => (
@@ -93,7 +98,7 @@ const Tabs = () => {
                   width: 28,
                   height: 28,
                   marginBottom: 12,
-                  tintColor: focused ? '#e32f45' : '#748c94',
+                  tintColor: focused ? Colors.borderWithOpacity : '#748c94',
                 }}
               />
             </View>
@@ -101,7 +106,7 @@ const Tabs = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#e32f45' : '#748c94',
+                color: focused ? '#1f41bb' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -123,7 +128,7 @@ const Tabs = () => {
               style={{
                 width: 30,
                 height: 30,
-                tintColor: '#fff',
+                tintColor: Colors.onPrimary,
                 marginTop: 15,
               }}
             />
@@ -131,7 +136,7 @@ const Tabs = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#e32f45' : '#748c94',
+                color: focused ? '#e32f45': '#748c94',
                 fontSize: 12,
               }}></Text>
           ),
@@ -152,7 +157,7 @@ const Tabs = () => {
                   width: 28,
                   height: 28,
                   marginBottom: 12,
-                  tintColor: focused ? '#e32f45' : '#748c94',
+                  tintColor: focused ? Colors.borderWithOpacity :'#748c94',
                 }}
               />
             </View>
@@ -160,7 +165,7 @@ const Tabs = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#e32f45' : '#748c94',
+                color: focused ? '#1f41bb' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -184,7 +189,7 @@ const Tabs = () => {
                   width: 28,
                   height: 28,
                   marginBottom: 12,
-                  tintColor: focused ? '#e32f45' : '#748c94',
+                  tintColor: focused ? Colors.borderWithOpacity : '#748c94',
                 }}
               />
             </View>
@@ -192,7 +197,7 @@ const Tabs = () => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#e32f45' : '#748c94',
+                color: focused ? '#1f41bb' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -207,15 +212,15 @@ const Tabs = () => {
 };
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: '#7F5DF0',
+    shadowColor: Colors.primary,
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: Spacing,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
+    
     elevation: 4,
   },
 });
-
 export default Tabs;

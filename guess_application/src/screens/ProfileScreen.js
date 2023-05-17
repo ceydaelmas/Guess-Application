@@ -1,9 +1,9 @@
 import React, {useContext} from 'react';
 import {View,Text,Button,StyleSheet} from 'react-native';
-import {AuthContext} from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProfileScreen = ({navigation}) => {
-    const {logout} = useContext(AuthContext);
+    const {logout} = useAuth;
 
     return(
         <View styles={styles.container}>

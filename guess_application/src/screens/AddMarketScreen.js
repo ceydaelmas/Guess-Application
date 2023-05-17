@@ -2,7 +2,6 @@ import React, {useContext, useState} from 'react';
 import {
   Button,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
   StyleSheet,
@@ -16,7 +15,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Spacing from '../constants/Spacing';
-import {AuthContext} from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppTextInput from '../components/AppTextInput';
 import Dropdown from '../components/Dropdown';
@@ -33,18 +32,24 @@ const items = [
 const AddMarketScreen = ({navigation}) => {
   const [stockName, setStockName] = useState(null);
   const [stockDescription, setStockDescription] = useState(null);
-  {/* Senet ekleme */}
+  {
+    /* Senet ekleme */
+  }
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
-  {/* Piyasa kapanma tarihi ekleme */}
+  {
+    /* Piyasa kapanma tarihi ekleme */
+  }
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [textDate, setDateText] = useState('Tarih');
   const [textTime, setTimeText] = useState('Saat');
   const currentDate = new Date();
-  const {isLoading} = useContext(AuthContext);
-     {/* Piyasa kapanma tarihi ekleme */}
+  const {isLoading} = useAuth();
+  {
+    /* Piyasa kapanma tarihi ekleme */
+  }
   const onChange = (event, selectedDate) => {
     setShow(false);
     const currentDate = selectedDate || date;
@@ -66,8 +71,10 @@ const AddMarketScreen = ({navigation}) => {
     setShow(true);
     setMode(currentMode);
   };
- 
-   {/* Senet ekleme */}
+
+  {
+    /* Senet ekleme */
+  }
   const deleteTag = tag => {
     setTags(tags.filter(t => t !== tag));
   };
@@ -93,12 +100,22 @@ const AddMarketScreen = ({navigation}) => {
             style={{
               alignItems: 'flex-start',
             }}>
+                <TouchableOpacity
+              onPress={() => navigation.goBack()}>
+             <Ionicons
+                name="ios-arrow-back-sharp"
+                color="#1D267D"
+                size={Spacing * 3}
+              />
+            </TouchableOpacity>
+               
             <Text
               style={{
                 fontSize: FontSize.xLarge,
                 color: Colors.text,
                 fontFamily: 'Poppins-Bold',
-                marginVertical: Spacing * 2,
+                marginTop:8,
+                marginBottom:Spacing*2,
               }}>
               Piyasa Oluştur
             </Text>
@@ -147,6 +164,7 @@ const AddMarketScreen = ({navigation}) => {
               }}>
               Kategoriler
             </Text>
+            <Dropdown />
             {/* Senet ekleme */}
             <Text
               style={{
@@ -182,7 +200,13 @@ const AddMarketScreen = ({navigation}) => {
                 </View>
               ))}
             </View>
-            <View>
+            <View
+          style={{
+            marginBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+            <View style={{flex: 1, marginBottom: -20}}>
               <AppTextInput
                 value={tagInput}
                 onChangeText={setTagInput}
@@ -190,11 +214,15 @@ const AddMarketScreen = ({navigation}) => {
                 placeholder="Senet Ekle"
               />
             </View>
+            <TouchableOpacity onPress={addTag} style={{marginLeft:10, marginTop:10}}>
+              <Ionicons name="add-circle-outline" color='#999' size={Spacing * 2} />
+            </TouchableOpacity>
+            </View>
             {/* Piyasa kaynağı ekleme */}
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
-                marginVertical: Spacing * 2
+                marginVertical: Spacing * 2,
               }}>
               Kaynaklar
             </Text>
@@ -203,7 +231,7 @@ const AddMarketScreen = ({navigation}) => {
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
-                marginVertical: Spacing * 2
+                marginVertical: Spacing * 2,
               }}>
               Piyasa Kapanış Tarihi
             </Text>

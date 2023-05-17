@@ -5,7 +5,8 @@ import {
     TextInputProps,
     View,
   } from "react-native";
-  import React, { useState } from "react";
+
+  import { useState } from "react";
   import Colors from "../constants/Colors";
   import FontSize from "../constants/FontSize";
   import Spacing from "../constants/Spacing";

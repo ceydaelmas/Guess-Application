@@ -12,7 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Spacing from '../constants/Spacing';
-import {AuthContext} from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SocialIcon} from 'react-native-elements';
 import AppTextInput from '../components/AppTextInput';
@@ -20,7 +20,7 @@ import AppTextInput from '../components/AppTextInput';
 const LoginScreen = ({navigation}) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const {isLoading, login} = useContext(AuthContext);
+  const {isLoading, login} = useAuth();;
   return (
     <SafeAreaView>
       <View

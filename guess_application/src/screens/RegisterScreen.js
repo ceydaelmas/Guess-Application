@@ -12,20 +12,19 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Spacing from '../constants/Spacing';
-import {AuthContext} from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {SocialIcon} from 'react-native-elements';
 import AppTextInputRegister from '../components/AppTextInputRegister';
 
 const RegisterScreen = ({navigation}) => {
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
+  const [userFullName, setUserFullName] = useState(null);
   const [userName, setUserName] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [userEmail, setUserEmail] = useState(null);
+  const [userPassword, setUserPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
 
-  const {isLoading, register} = useContext(AuthContext);
+  const {isLoading, register} = useAuth();
 
   return (
     <SafeAreaView>
@@ -63,19 +62,14 @@ const RegisterScreen = ({navigation}) => {
             marginVertical: Spacing * 2,
           }}>
           <AppTextInputRegister
-            value={firstName}
-            placeholder="Adınız"
-            onChangeText={text => setFirstName(text)}
+            value={userFullName}
+            placeholder="Adınız Soyadınız"
+            onChangeText={text => setUserFullName(text)}
           />
           <AppTextInputRegister
-            value={lastName}
-            placeholder="Soyadınız"
-            onChangeText={text => setLastName(text)}
-          />
-          <AppTextInputRegister
-            value={email}
+            value={userEmail}
             placeholder="Mail Adresiniz"
-            onChangeText={text => setEmail(text)}
+            onChangeText={text => setUserEmail(text)}
           />
 
           <AppTextInputRegister
@@ -85,9 +79,9 @@ const RegisterScreen = ({navigation}) => {
           />
 
           <AppTextInputRegister
-            value={password}
+            value={userPassword}
             placeholder="Şifreniz"
-            onChangeText={text => setPassword(text)}
+            onChangeText={text => setUserPassword(text)}
             secureTextEntry
           />
           <AppTextInputRegister
@@ -114,12 +108,12 @@ const RegisterScreen = ({navigation}) => {
           }}
           onPress={() => {
             register(
-              firstName,
-              lastName,
-              email,
+              userFullName,
+              userEmail,
               userName,
-              password,
+              userPassword,
               confirmPassword,
+              navigation
             );
           }}>
           <Text

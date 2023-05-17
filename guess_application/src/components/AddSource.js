@@ -1,22 +1,19 @@
 import React, {useState} from 'react';
-import {
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 import Colors from '../constants/Colors';
 
 import Spacing from '../constants/Spacing';
 
 import AppTextInput from '../components/AppTextInput';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const AddSource = ({navigation}) => {
   //source
   const [stocks, setStocks] = useState(['']);
   const [errors, setErrors] = useState([]);
   const [focused, setFocused] = useState(false);
-  
+
   //source
   const handleRemoveError = index => {
     const newErrors = [...errors];
@@ -42,18 +39,11 @@ const AddSource = ({navigation}) => {
   };
 
   const handleRemoveStock = index => {
-    setStocks([
-      ...stocks.slice(0, index),
-      ...stocks.slice(index + 1),
-    ]);
+    setStocks([...stocks.slice(0, index), ...stocks.slice(index + 1)]);
   };
 
   const handleInputChange = (index, value) => {
-    setStocks([
-      ...stocks.slice(0, index),
-      value,
-      ...stocks.slice(index + 1),
-    ]);
+    setStocks([...stocks.slice(0, index), value, ...stocks.slice(index + 1)]);
   };
 
   const handleSubmit = () => {
@@ -68,25 +58,28 @@ const AddSource = ({navigation}) => {
   return (
     <View style={{maxWidth: 600}}>
       <TouchableOpacity
-       onFocus={() => setFocused(true)}
-       onBlur={() => setFocused(false)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         onPress={handleAddStock}
-        style={[{
-          marginBottom: Spacing *2,
-          borderRadius: Spacing,
-          borderStyle: 'dashed',
-          borderWidth: 1,
-          borderColor: '#ccc',
-          padding: Spacing,
-        },focused && {
+        style={[
+          {
+            marginBottom: Spacing * 2,
+            borderRadius: Spacing,
+            borderStyle: 'dashed',
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: Spacing,
+          },
+          focused && {
             borderWidth: 2,
             borderColor: Colors.primary,
-            shadowOffset: { width: 4, height: Spacing },
+            shadowOffset: {width: 4, height: Spacing},
             shadowColor: Colors.primary,
             shadowOpacity: 0.2,
-            elevation:12,
+            elevation: 12,
             shadowRadius: Spacing,
-          },]}>
+          },
+        ]}>
         <Text
           style={{
             fontFamily: 'Poppins-Regular',
@@ -119,10 +112,13 @@ const AddSource = ({navigation}) => {
           </View>
           {stocks.length > 1 && (
             <TouchableOpacity
-              
               onPress={() => handleRemoveStock(index)}
               style={{marginLeft: 10}}>
-              <Text style={{color: '#999', fontSize: 24}}>&ndash;</Text>
+              <Ionicons
+                name="remove-circle-outline"
+                color="#999"
+                size={Spacing * 2}
+              />
             </TouchableOpacity>
           )}
         </View>
