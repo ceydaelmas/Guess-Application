@@ -85,7 +85,6 @@ const Tabs = ({navigation}) => {
       />
       <Tab.Screen
         name="Search"
-        onPress={() => navigation.navigate('Search')}
         component={SearchScreen}
         options={{
           tabBarIcon: ({focused}) => (

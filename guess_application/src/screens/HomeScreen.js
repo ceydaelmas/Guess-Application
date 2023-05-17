@@ -194,7 +194,7 @@ const HomeScreen = ({ navigation }) => {
     return (
       <View>
       {markets.map(item => (
-        <TouchableOpacity
+        <View
           style={{
             flexDirection: 'row',
             backgroundColor: '#F6F1F1',
@@ -207,7 +207,6 @@ const HomeScreen = ({ navigation }) => {
             alignItems: 'center',
             marginTop: 10,
           }}
-          onPress={() => navigation.push('MarketDetail')}
           key={item.marketId}>
           <Image
           source={require('../assets/images/check.png')}
@@ -249,17 +248,19 @@ const HomeScreen = ({ navigation }) => {
         <View style={{
             paddingLeft:30,
         }}>
-        <ProgressCircle
-        percent={0}
-          radius={17}
-          borderWidth={1.5}
-          color="#f580084"
-          shadowColor="#FFF"
-          bgColor="#FFF"
-          marginHorizontal={150}>
-          <Image source={require('../assets/images/pl.png')} />
-        </ProgressCircle></View>
-        </TouchableOpacity>
+         <TouchableOpacity
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: '#ffff',
+            width: 40,
+            height: 40,
+            borderRadius: 40,
+          }}
+          onPress={() => navigation.push('MarketDetail', { marketId: item.marketId })}>
+          <Ionicons name="ios-arrow-forward-sharp" color="#f58084" size={30} />
+        </TouchableOpacity></View>
+        </View>
       ))}
     </View>
     );

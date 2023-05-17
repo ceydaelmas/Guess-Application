@@ -1,5 +1,6 @@
 import React, {useContext} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
+import ProfileTabView from '../components/ProfileTabView';
 const SearchScreen = ({navigation}) => {
   return (
     <View styles={styles.container}>

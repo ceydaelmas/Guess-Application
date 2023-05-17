@@ -78,19 +78,8 @@ export const AuthProvider = ({children}) => {
         setUserInfo(userInfo);
         console.log("userrr", userInfo);
         AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-        AsyncStorage.setItem('jwt', userInfo.data.token);
-        const removeItemValue =async(key)=> {
-          try {
-              await AsyncStorage.removeItem(key);
-              return true;
-          }
-          catch(exception) {
-              return false;
-          }
-      }
-        
-      
-        
+        AsyncStorage.setItem('jwt', userInfo.data.token);     
+        setToken(userInfo.data.token); 
         navigation.navigate('Tabs');
       })
       .catch(e => {
@@ -100,17 +89,13 @@ export const AuthProvider = ({children}) => {
       });
   };
   
-
-  const authorizedFetch = async (url, options = {}) => {
-    useEffect(() => {
-      getData();
-    }, []);
-  
-    let localToken = await getTokenData();
+  const authorizedFetch =  async (url, options = {}) => {
+    let localToken =  await getTokenData();
+    console.log("mylocaltoken",localToken);
     if (!localToken) {
       throw new Error("Token is not set");
     }
-
+  
     return fetch(url, {
       ...options,
       headers: {
@@ -118,28 +103,25 @@ export const AuthProvider = ({children}) => {
         Authorization: `Bearer ${localToken}`,
       },
     });
+  };  
+
+  const removeToken = async () => {
+    try {
+      await AsyncStorage.removeItem('jwt');
+      setToken(null);
+      return true;
+    } catch (exception) {
+      return false;
+    }
   };
 
-  const logout = navigation => {
-    setIsLoading(true);
-    axios
-      .post(
-        `${BASE_URL}/Account/logout`,
-        {},
-        {
-          headers: {Authorization: `Bearer ${userInfo.data.jwToken}`},
-        },
-      )
-      .then(res => {
-        console.log(res.data);
-        AsyncStorage.removeItem('userInfo');
-        navigation.navigate('Welcome');
-        setUserInfo({});
-        setIsLoading(false);
+  const logout = () => {
+    removeToken()
+      .then(success => {
+        console.log("silindi mi", success);
       })
-      .catch(e => {
-        console.log(`logout error ${e}`);
-        setIsLoading(false);
+      .catch(error => {
+        console.error("Logout error:", error);
       });
   };
 
@@ -172,7 +154,9 @@ export const AuthProvider = ({children}) => {
         register,
         login,
         logout,
-        token
+        token,
+        getTokenData,
+        authorizedFetch
       }}>
       {children}
     </AuthContext.Provider>
