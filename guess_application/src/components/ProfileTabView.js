@@ -5,9 +5,8 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import MarketCards from './MarketCards';
 import { useMarket } from '../context/MarketContext';
 
-const ProfileTabView = () => {
+const ProfileTabView = ({markets}) => {
   const Tab = createMaterialTopTabNavigator();
-
   const Markets = () => {
     return (
       <ScrollView
@@ -23,7 +22,7 @@ const ProfileTabView = () => {
             paddingHorizontal: 25,
             paddingBottom:100
           }}>
-          <MarketCards/>
+          <MarketCards markets={markets}/>
         </View>
       </ScrollView>
     );
@@ -54,21 +53,19 @@ const ProfileTabView = () => {
   const Favorites = () => {
     return (
       <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          width: '100%',
-          height: '100%',
-        }}>
+      showsVerticalScrollIndicator={false}
+      style={{
+        backgroundColor: '#ACB1D6',
+      }}>
         <View
           style={{
-            width: '100%',
-            minHeight:300,
-            backgroundColor: 'white',
-            flexWrap: 'wrap',
-            flexDirection: 'row',
-            paddingVertical: 5,
-            justifyContent: 'space-between',
+            backgroundColor: '#FFF',
+            minHeight:500,
+            flexGrow:1,
+            paddingHorizontal: 25,
+            paddingBottom:100
           }}>
+          <MarketCards markets={markets} />
         </View>
       </ScrollView>
     );

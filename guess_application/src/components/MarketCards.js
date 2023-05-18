@@ -5,28 +5,27 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useMarket } from '../context/MarketContext';
 import { useNavigation } from '@react-navigation/native';
 
-const MarketCards = () => {
-  const {currentUserMarkets} = useMarket();
+const MarketCards = ({markets}) => {
   const navigation = useNavigation();
   return (
     <View>
-      {currentUserMarkets.map(item => ( 
+      {markets.map(item => ( 
         <View
           style={{
             flexDirection: 'row',
-            backgroundColor: '#DBDFEA',
-            paddingTop: 40,
-            paddingBottom: 40,
+            backgroundColor: '#F6F1F1',
+            paddingTop: 30,
+            paddingBottom: 30,
             paddingLeft: 20,
             paddingRight: 20,
             marginHorizontal: 0,
             borderRadius: 20,
             alignItems: 'center',
-            marginTop: 10,
+            marginTop: 15,
           }}
           >
           <Image
-          source={require('../assets/images/check.png')}
+           source={require('../assets/images/multi.png')}
           style={{width: 30, height: 30}}
         />
         <View>
@@ -52,6 +51,7 @@ const MarketCards = () => {
             {item.marketDescription}
           </Text>
           </View>
+         
           <Text
             style={{
               color: '#345c74',
@@ -59,7 +59,16 @@ const MarketCards = () => {
               fontSize: 15,
               paddingHorizontal: 20,
             }}>
-             {item.marketOperationNumber} işlem yapıldı{' '}
+             Kategori: {item.categoryName} 
+          </Text>
+          <Text
+            style={{
+              color: '#AEB5BC',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 15,
+              paddingHorizontal: 20,
+            }}>
+     {item.isConfirmed === false ? "Onay bekliyor" : `${item.marketOperationNumber} işlem yapıldı`}
           </Text>
         </View>
         <View style={{

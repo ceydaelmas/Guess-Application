@@ -17,6 +17,7 @@ import {useMarket} from '../context/MarketContext';
 import {useState, useEffect} from 'react';
 import { useUser } from '../context/UserContext';
 import SourcesCard from '../components/SourcesCard';
+import { format } from 'date-fns';
 
 const MarketDetailScreen = ({navigation}) => {
   const route = useRoute();
@@ -24,17 +25,22 @@ const MarketDetailScreen = ({navigation}) => {
   const [user, setUser] = useState(null);
   const {marketId} = route.params;
   const {fetchMarketById} = useMarket();
-  const {fetchOtherUserByUserName} = useUser();
-
+  const {fetchOtherUserByUserName,currentUserData} = useUser();
   useEffect(() => {
     const getMarket = async () => {
       const marketData = await fetchMarketById(marketId);
       const userData = await fetchOtherUserByUserName(marketData.userName);
       setUser(userData);
-      setMarket(marketData);
+      const date = new Date(marketData.marketEndDate);
+        setMarket({
+          ...marketData,
+          formattedEndDate: format(date, 'yyyy-MM-dd'),
+          formattedEndTime: format(date, 'HH:mm'),
+        });
+       
     };
     getMarket();
-  }, [marketId]);
+}, [marketId]);
 
 
   if (market === null || user === null) {
@@ -107,19 +113,25 @@ const MarketDetailScreen = ({navigation}) => {
           alignSelf: 'center',
           textAlign: 'center',
         }}>
-        {market.marketName}
+      {market.marketName}
+      {/* {`Tarih: ${market.formattedEndDate} Saat: ${market.formattedEndTime}`} */}
       </Text>
       <TouchableOpacity
         style={{
           flexDirection: 'row',
           marginTop: 10,
-          marginBottom:40,
+          marginBottom:30,
           alignSelf: 'center',
           textAlign: 'center',
         }}
-        onPress={() => navigation.push('OtherUserPage', { userData: user })}>
+        
+        onPress={
+          currentUserData.data.userName === user.data.userName
+            ? () => navigation.navigate('ProfileScreen')
+            : () => navigation.push('OtherUserPage', { userName: user.data.userName })
+        }>
         <Image
-          source={{uri:user.data.profilePhotoUrl }}
+         source={user.data.profilePhotoUrl? {uri: user.data.profilePhotoUrl} : require('../assets/images/nopic.png')}
           style={{
             height: 60,
             width: 60,
@@ -135,7 +147,7 @@ const MarketDetailScreen = ({navigation}) => {
               fontFamily: 'Poppins-Regular',
               fontSize: 20,
             }}>
-            {user.data.userFullName}
+            {user.data.userName}
           </Text>
           <Text
             style={{
@@ -147,7 +159,29 @@ const MarketDetailScreen = ({navigation}) => {
           </Text>
         </View>
       </TouchableOpacity>
+      <View
+          style={{
+            flexDirection: 'row',
+            backgroundColor: '#DBDFEA',
+            marginTop: 0,
+            marginBottom:20,
+            marginHorizontal: 20,
+            borderRadius: 20,
+            paddingVertical: 8,
+            alignItems:'center',
+            justifyContent:'center'
 
+          }}>
+            <Text
+              style={{
+                color: '#345c74',
+                fontSize: 16,
+                fontFamily: 'Poppins-Regular',
+                
+              }}>
+              {`Bitiş Zamanı:   ${market.formattedEndDate} , ${market.formattedEndTime}`}  
+            </Text>
+          </View>
       <Text
         style={{
           color: '#FFF',
@@ -159,11 +193,14 @@ const MarketDetailScreen = ({navigation}) => {
         }}>
         {market.marketDescription}
       </Text>
+      
       {market.marketStockList.map((stock, index) => (
       <View>
          <StocksCard stock={stock} num={index} />
       </View>
         ))}
+     
+
        <Text
         style={{
           color: '#FFF',

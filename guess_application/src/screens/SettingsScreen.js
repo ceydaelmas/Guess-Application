@@ -7,7 +7,6 @@ const SettingsScreen = ({navigation}) => {
     const { logout } = useAuth();
     const handleLogout = () => {
         logout();
-        navigation.navigate('WelcomeScreen');
       };
  
   return (

@@ -19,6 +19,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 
 import { useAuth } from '../context/AuthContext';
 import OtherUserPage from '../screens/OtherUserPage';
+import FollowScreen from '../screens/FollowScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,16 @@ const Navigation = () => {
              <Stack.Screen
               name="OtherUserPage"
               component={OtherUserPage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ProfileScreen"
+              component={ProfileScreen}
+              options={{ headerShown: false }}
+            />
+              <Stack.Screen
+              name="FollowScreen"
+              component={FollowScreen}
               options={{ headerShown: false }}
             />
           </>

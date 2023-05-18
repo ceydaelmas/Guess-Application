@@ -17,6 +17,7 @@ import { useMarket } from '../context/MarketContext';
 import { useCategory } from '../context/CategoryContext';
 
 import { Icon } from 'react-native-elements';
+import { useAuth } from '../context/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -24,13 +25,16 @@ const HomeScreen = ({ navigation }) => {
   const { marketData } = useMarket();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [markets, setMarkets] = useState(marketData);
-
+  const { logout } = useAuth();
+  const handleLogout = () => {
+      logout();
+    };
   useEffect(() => {
     setMarkets(marketData);
   }, [marketData]);
 
   function onSelectCategory(category) {
-    let marketList = marketData.filter(market => market.categoryId === category.id);
+    let marketList = marketData.filter(market => market.categoryName === category.categoryName);
     setMarkets(marketList);
     setSelectedCategory(category);
     if (category.categoryName === "Tümü") {
@@ -52,30 +56,24 @@ const HomeScreen = ({ navigation }) => {
             paddingTop: 20,
             alignItems: 'center',
           }}>
-          <View
+          <TouchableOpacity
             style={{
-              width: '50%',
-            }}>
-            <Image
-              source={require('../assets/images/x.png')}
-              style={{width: 20, height: 20, alignItems: 'flex-end'}}
-            />
-          </View>
-          <View
-            style={{
-              width: '50%',
+              width: '100%',
               alignItems: 'flex-end',
-            }}>
-            <Ionicons
-              name="logo-google"
-              size={22}
-              color="#d2d2d2"
-              style={{
-                marginRight: -7,
-                marginTop: 7,
-              }}
-            />
-          </View>
+            }}
+            onPress={handleLogout}>
+          <Ionicons
+            name="ios-exit-outline"
+            size={30}
+            color="#fff"
+            style={{
+              marginRight: -7,
+              marginTop: 7,
+            }}
+          />
+           
+          </TouchableOpacity>
+         
         </View>
 
         <Text
@@ -198,8 +196,8 @@ const HomeScreen = ({ navigation }) => {
           style={{
             flexDirection: 'row',
             backgroundColor: '#F6F1F1',
-            paddingTop: 40,
-            paddingBottom: 40,
+            paddingTop: 35,
+            paddingBottom: 35,
             paddingLeft: 20,
             paddingRight: 20,
             marginHorizontal: 0,
@@ -209,8 +207,8 @@ const HomeScreen = ({ navigation }) => {
           }}
           key={item.marketId}>
           <Image
-          source={require('../assets/images/check.png')}
-          style={{width: 30, height: 30}}
+          source={require('../assets/images/multi.png')}
+          style={{width: 40, height: 40}}
         />
         <View>
           <Text

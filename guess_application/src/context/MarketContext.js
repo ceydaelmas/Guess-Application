@@ -77,6 +77,26 @@ export const MarketProvider = ({children}) => {
       });
   };
 
+  const getAllMarketsForOtherUser = async userName => {
+    return await fetch(
+      `${BASE_URL}/Market/get-all-markets-by-user-name?UserName=${userName}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      },
+    )
+      .then(response => {
+       
+        return response.json();
+      })
+      .then(data => {
+        return data;
+      });
+  };
+
   useEffect(() => {
     setMarketData(marketData); // markets state'inin güncellenmesi
   }, [marketData]);
@@ -89,7 +109,8 @@ export const MarketProvider = ({children}) => {
       value={{
         marketData,
         fetchMarketById,
-        currentUserMarkets
+        currentUserMarkets,
+        getAllMarketsForOtherUser
       }}>
       {children}
     </MarketContext.Provider>
