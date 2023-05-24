@@ -22,6 +22,7 @@ import Dropdown from '../components/Dropdown';
 
 import AddSource from '../components/AddSource';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useMarket } from '../context/MarketContext';
 const items = [
   {id: 1, name: 'Ceyda'},
   {id: 2, name: 'ARzu'},
@@ -47,6 +48,8 @@ const AddMarketScreen = ({navigation}) => {
   const [textTime, setTimeText] = useState('Saat');
   const currentDate = new Date();
   const {isLoading} = useAuth();
+  const {addMarket} = useMarket();
+
   {
     /* Piyasa kapanma tarihi ekleme */
   }

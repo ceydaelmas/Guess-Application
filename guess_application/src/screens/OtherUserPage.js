@@ -12,6 +12,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileTabView from '../components/ProfileTabView';
 import {useMarket} from '../context/MarketContext';
 import {useUser} from '../context/UserContext';
+import { useFavorites } from '../context/FavoritesContext';
 
 const OtherUserPage = ({navigation}) => {
   const route = useRoute();
@@ -21,6 +22,16 @@ const OtherUserPage = ({navigation}) => {
   const [followingUsers, setFollowingUsers] = useState({});
   const [markets, setMarkets] = useState(null);
   const {getAllMarketsForOtherUser} = useMarket();
+  const { getFavoritesByUserName} = useFavorites();
+  const [userFavorites,setUserFavorites] = useState(null);
+
+  useEffect(() => {
+    const getFavorites = async () => {
+      const favoritesData = await getFavoritesByUserName(userName);
+      setUserFavorites(favoritesData);
+    };
+    getFavorites();
+  }, [getFavoritesByUserName, currentUserData]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -238,7 +249,7 @@ const OtherUserPage = ({navigation}) => {
         </TouchableOpacity>
       </View>
 
-      <ProfileTabView markets={markets} />
+      <ProfileTabView markets={markets} favorites={userFavorites} isCurrentUserPage = {false}/>
     </SafeAreaView>
   );
 };

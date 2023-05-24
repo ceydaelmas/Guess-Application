@@ -13,7 +13,7 @@ export default {
   primary: blue,
   onPrimary: white,
   active: blue,
-  borderWithOpacity: "#1f41bb",
+  borderWithOpacity: "#f58084",
   lightPrimary: lightBlue,
   gray: gray,
   darkGray:"#e3e3e3",

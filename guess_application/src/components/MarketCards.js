@@ -68,7 +68,7 @@ const MarketCards = ({markets}) => {
               fontSize: 15,
               paddingHorizontal: 20,
             }}>
-     {item.isConfirmed === false ? "Onay bekliyor" : `${item.marketOperationNumber} işlem yapıldı`}
+     {item.isConfirmed === false ? "Onay bekliyor" : `${item.marketTransactionAmount} işlem yapıldı`}
           </Text>
         </View>
         <View style={{

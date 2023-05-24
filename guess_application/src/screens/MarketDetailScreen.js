@@ -18,6 +18,7 @@ import {useState, useEffect} from 'react';
 import { useUser } from '../context/UserContext';
 import SourcesCard from '../components/SourcesCard';
 import { format } from 'date-fns';
+import { useFavorites } from '../context/FavoritesContext';
 
 const MarketDetailScreen = ({navigation}) => {
   const route = useRoute();
@@ -26,6 +27,10 @@ const MarketDetailScreen = ({navigation}) => {
   const {marketId} = route.params;
   const {fetchMarketById} = useMarket();
   const {fetchOtherUserByUserName,currentUserData} = useUser();
+  const { getFavoritesByUserName, addMarketToFavorites, removeMarketFromFavorites } = useFavorites();
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  
   useEffect(() => {
     const getMarket = async () => {
       const marketData = await fetchMarketById(marketId);
@@ -40,7 +45,28 @@ const MarketDetailScreen = ({navigation}) => {
        
     };
     getMarket();
+    const checkFavorite = async () => {
+      const favorites = await getFavoritesByUserName(currentUserData.data.userName);
+      if(favorites.succeeded){
+        const favoriteMarket = favorites.data.find((favorite) => favorite.marketId === marketId);
+        setIsFavorite(!!favoriteMarket);
+      }
+    };
+    checkFavorite();
 }, [marketId]);
+const toggleFavorite = async () => {
+  if(isFavorite){
+    const removed = await removeMarketFromFavorites(marketId);
+    if(removed){
+      setIsFavorite(false);
+    }
+  }else{
+    const added = await addMarketToFavorites(marketId);
+    if(added.succeeded){
+      setIsFavorite(true);
+    }
+  }
+};
 
 
   if (market === null || user === null) {
@@ -92,7 +118,7 @@ const MarketDetailScreen = ({navigation}) => {
         </TouchableOpacity>
         {/* Favoriye ekleme butonu */}
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={toggleFavorite}
           style={{
             paddingHorizontal: 10,
             paddingVertical: 12,
@@ -101,7 +127,7 @@ const MarketDetailScreen = ({navigation}) => {
             // backgroundColor: '#9a3c7e',
             marginLeft: 270,
           }}>
-          <Ionicons name="ios-heart-outline" color="#FFF" size={35} />
+    <Ionicons name={isFavorite ? "ios-heart-sharp" : "ios-heart-outline"} color="#FFF" size={35} />
         </TouchableOpacity>
       </View>
       <Text

@@ -8,8 +8,6 @@ export const useFavorites = () => {
 };
 
 export const FavoritesProvider = ({children}) => {
-  const [favorites, setFavorites] = useState([]);
-
   const { token } = useAuth();
 
   const getFavoritesByUserName = async userName => {
@@ -20,13 +18,13 @@ export const FavoritesProvider = ({children}) => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
+      credentials: 'include',
       },
     )
       .then(response => {
         return response.json();
       })
       .then(data => {
-        setFavorites(data);
         return data;
       });
   };
@@ -47,7 +45,6 @@ export const FavoritesProvider = ({children}) => {
         return response.json();
       })
       .then(data => {
-        setFavorites([...favorites, data]);
         return data;
       });
   };
@@ -65,9 +62,6 @@ export const FavoritesProvider = ({children}) => {
       },
     )
       .then(response => {
-        if (response.ok) {
-          setFavorites(favorites.filter(fav => fav.marketId !== marketId));
-        }
         return response.ok;
       });
   };
@@ -75,7 +69,6 @@ export const FavoritesProvider = ({children}) => {
   return (
     <FavoritesContext.Provider
       value={{
-        favorites,
         getFavoritesByUserName,
         addMarketToFavorites,
         removeMarketFromFavorites,

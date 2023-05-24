@@ -4,8 +4,9 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import Ionic from 'react-native-vector-icons/Ionicons';
 import MarketCards from './MarketCards';
 import { useMarket } from '../context/MarketContext';
+import FavoritesCard from './FavoritesCard';
 
-const ProfileTabView = ({markets}) => {
+const ProfileTabView = ({markets, favorites,isCurrentUserPage}) => {
   const Tab = createMaterialTopTabNavigator();
   const Markets = () => {
     return (
@@ -65,7 +66,7 @@ const ProfileTabView = ({markets}) => {
             paddingHorizontal: 25,
             paddingBottom:100
           }}>
-          <MarketCards markets={markets} />
+          <FavoritesCard favorites={favorites} isCurrentUserPage = {isCurrentUserPage}/>
         </View>
       </ScrollView>
     );

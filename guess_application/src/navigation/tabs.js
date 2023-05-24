@@ -44,7 +44,11 @@ const Tabs = ({navigation}) => {
           right: 0,
           elevation: 5,
           backgroundColor: '#ffffff',
-          borderRadius: 0,
+          borderColor:'#dedede',
+          borderWidth:2,
+          borderTopLeftRadius:20,
+          borderTopRightRadius:20,
+          borderRightColor:'red',
           height: 80,
           ...styles.shadow,
         },
@@ -73,7 +77,7 @@ const Tabs = ({navigation}) => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#1f41bb' : '#748c94',
+                color: focused ? '#f58084' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -105,7 +109,7 @@ const Tabs = ({navigation}) => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#1f41bb' : '#748c94',
+                color: focused ? '#f58084' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -115,7 +119,7 @@ const Tabs = ({navigation}) => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="AddMarket"
         component={AddMarketScreen}
         options={{
@@ -141,7 +145,7 @@ const Tabs = ({navigation}) => {
           ),
           tabBarButton: props => <CustomTabBarButton {...props} />,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Notification"
         component={NotificationScreen}
@@ -164,7 +168,7 @@ const Tabs = ({navigation}) => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#1f41bb' : '#748c94',
+                color: focused ? '#f58084' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',
@@ -196,7 +200,7 @@ const Tabs = ({navigation}) => {
           tabBarLabel: ({focused}) => (
             <Text
               style={{
-                color: focused ? '#1f41bb' : '#748c94',
+                color: focused ? '#f58084' : '#748c94',
                 fontSize: 12,
                 marginBottom: 12,
                 fontFamily: 'Poppins-SemiBold',

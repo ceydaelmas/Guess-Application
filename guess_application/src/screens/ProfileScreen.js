@@ -20,16 +20,38 @@ const ProfileScreen = ({navigation}) => {
   const {currentUserData} = useUser();
   const {currentUserMarkets} = useMarket();
   const { getFavoritesByUserName} = useFavorites();
-  const [favorites,setFavorites] = useState(null);
-//   useEffect(() => {
-//     const getMarket = async () => {
-//       const favoritesMarketData = await getFavoritesByUserName(currentUserData.data.userName);
-//       setFavorites(favoritesMarketData);    
-//     };
-//     getMarket();
-    
-// }, []);
-// console.log("useeffeck",favorites);
+  const [userFavorites,setUserFavorites] = useState(null);
+
+  useEffect(() => {
+    const getFavorites = async () => {
+      const favoritesData = await getFavoritesByUserName(currentUserData.data.userName);
+      setUserFavorites(favoritesData);
+    };
+    getFavorites();
+  }, [getFavoritesByUserName, currentUserData,userFavorites]);
+
+
+  if (currentUserData === null) {
+    // Yükleniyor durumunu göstermek için.
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <ActivityIndicator
+          size={'large'}
+          style={{padding: 12, backgroundColor: '#DBDFEA', borderRadius: 12}}
+          color="#ACB1D6"
+        />
+        <Text
+          style={{fontSize: 18, marginTop: 12, fontFamily: 'Poppins-SemiBold'}}>
+          Kullanıcı yükleniyor...
+        </Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView
       style={{
@@ -136,7 +158,7 @@ const ProfileScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <ProfileTabView markets={currentUserMarkets}  />
+      <ProfileTabView markets={currentUserMarkets} favorites={userFavorites} isCurrentUserPage = {true} />
     </SafeAreaView>
   );
 };

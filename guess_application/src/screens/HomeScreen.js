@@ -18,9 +18,10 @@ import { useCategory } from '../context/CategoryContext';
 
 import { Icon } from 'react-native-elements';
 import { useAuth } from '../context/AuthContext';
+import { useUser } from '../context/UserContext';
 
 const HomeScreen = ({ navigation }) => {
-
+  const {currentUserData} = useUser();
   const { categoryData } = useCategory();
   const { marketData } = useMarket();
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -83,7 +84,7 @@ const HomeScreen = ({ navigation }) => {
             color: '#FFF',
             paddingTop: 20,
           }}>
-          Hoşgeldin Ceyda
+          Hoşgeldin 
         </Text>
         <Text
           style={{

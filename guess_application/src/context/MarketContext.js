@@ -89,11 +89,37 @@ export const MarketProvider = ({children}) => {
       },
     )
       .then(response => {
-       
         return response.json();
       })
       .then(data => {
         return data;
+      });
+  };
+  const addMarket = async (marketName, marketDescription, marketEndDate, marketSourceLink, categoryName, marketStockList) => {
+    const marketDetails = {
+      marketName,
+      marketDescription,
+      marketEndDate,
+      marketSourceLink,
+      categoryName,
+      marketStockList
+    };
+    return await axios({
+      method: 'post',
+      url: `${BASE_URL}/Market/add-market`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      data: marketDetails,
+    })
+      .then(response => {
+        // Yeni oluşturulan marketi mevcut market listesine ekle
+        setMarketData([...marketData, response.data]);
+        return response.data;
+      })
+      .catch(error => {
+        console.log(error);
       });
   };
 
@@ -110,7 +136,8 @@ export const MarketProvider = ({children}) => {
         marketData,
         fetchMarketById,
         currentUserMarkets,
-        getAllMarketsForOtherUser
+        getAllMarketsForOtherUser,
+        addMarket 
       }}>
       {children}
     </MarketContext.Provider>
