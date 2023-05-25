@@ -24,10 +24,7 @@ const MarketCards = ({markets}) => {
             marginTop: 15,
           }}
           >
-          <Image
-           source={require('../assets/images/multi.png')}
-          style={{width: 30, height: 30}}
-        />
+         <Ionicons name="reader-outline" color="#f58084" size={35} />
         <View>
           <Text
             style={{

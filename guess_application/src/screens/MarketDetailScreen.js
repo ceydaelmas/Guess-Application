@@ -29,7 +29,6 @@ const MarketDetailScreen = ({navigation}) => {
   const {fetchOtherUserByUserName,currentUserData} = useUser();
   const { getFavoritesByUserName, addMarketToFavorites, removeMarketFromFavorites } = useFavorites();
   const [isFavorite, setIsFavorite] = useState(false);
-
   
   useEffect(() => {
     const getMarket = async () => {
@@ -222,11 +221,11 @@ const toggleFavorite = async () => {
       
       {market.marketStockList.map((stock, index) => (
       <View>
-         <StocksCard stock={stock} num={index} />
+         <StocksCard stock={stock} market={market} num={index} navigation={navigation} />
       </View>
         ))}
      
-
+    
        <Text
         style={{
           color: '#FFF',
@@ -243,7 +242,7 @@ const toggleFavorite = async () => {
          <SourcesCard source={source} num={index} />
       </View>
         ))}
-   
+
     </ScrollView>
   );
 };

@@ -29,7 +29,7 @@ const ProfileScreen = ({navigation}) => {
     };
     getFavorites();
   }, [getFavoritesByUserName, currentUserData,userFavorites]);
-
+ 
 
   if (currentUserData === null) {
     // Yükleniyor durumunu göstermek için.
@@ -109,6 +109,26 @@ const ProfileScreen = ({navigation}) => {
           {currentUserData.data.userName}
         </Text>
       </View>
+      <View
+              style={{
+                flexDirection: 'row',
+                marginHorizontal: 20,
+                borderRadius: 20,
+                paddingVertical: 8,
+                alignItems:'center',
+                justifyContent:'center'
+              }}
+            >
+              <Text
+                style={{
+                  color: '#345c74',
+                  fontSize: 18,
+                  fontFamily: 'Poppins-Regular',
+                }}
+              >
+                Tahmin coin: <Text style={{fontFamily: 'Poppins-SemiBold', color: '#345c74'}}>{parseFloat(currentUserData.data.balance).toFixed(0)}</Text>
+              </Text>
+            </View>
 
       <View
         style={{

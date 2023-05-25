@@ -18,7 +18,7 @@ export const MarketProvider = ({children}) => {
 
   useEffect(() => {
     getAllMarketsForCurrentUser();
-  }, [token]);
+  }, [token,marketData]);
 
   const fetchAllMarketData = () => {
     fetch(`${BASE_URL}/Market/get-all-confirmed-markets`, {
@@ -128,7 +128,7 @@ export const MarketProvider = ({children}) => {
   }, [marketData]);
   useEffect(() => {
     fetchAllMarketData();
-  }, []);
+  }, [marketData]);
 
   return (
     <MarketContext.Provider

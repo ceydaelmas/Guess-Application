@@ -57,10 +57,7 @@ const FavoritesCard = ({favorites, isCurrentUserPage}) => {
             marginTop: 15,
           }}>
           <TouchableOpacity>
-            <Image
-              source={require('../assets/images/multi.png')}
-              style={{width: 30, height: 30}}
-            />
+          <Ionicons name="heart-sharp" color="#f58084" size={35} />
           </TouchableOpacity>
           <View>
             <Text

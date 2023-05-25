@@ -17,7 +17,7 @@ export function UserProvider({children}) {
 
   useEffect(() => {
     getCurrentUserData();
-  }, [token]);
+  }, [token,currentUserData]);
 
   const fetchOtherUserByUserName = async userName => {
     return await fetch(

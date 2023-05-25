@@ -165,7 +165,26 @@ const OtherUserPage = ({navigation}) => {
           }}>
           {userData.data.userName}
         </Text>
-
+        <View
+              style={{
+                flexDirection: 'row',
+                marginHorizontal: 20,
+                borderRadius: 20,
+                paddingVertical: 8,
+                alignItems:'center',
+                justifyContent:'center'
+              }}
+            >
+              <Text
+                style={{
+                  color: '#345c74',
+                  fontSize: 18,
+                  fontFamily: 'Poppins-Regular',
+                }}
+              >
+                Tahmin coin: <Text style={{fontFamily: 'Poppins-SemiBold', color: '#345c74'}}>{parseFloat(userData.data.balance).toFixed(0)}</Text>
+              </Text>
+            </View>
         <TouchableOpacity onPress={handleFollow}>
           <View
             style={{

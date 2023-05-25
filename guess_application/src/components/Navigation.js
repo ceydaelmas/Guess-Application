@@ -20,6 +20,8 @@ import SettingsScreen from '../screens/SettingsScreen';
 import { useAuth } from '../context/AuthContext';
 import OtherUserPage from '../screens/OtherUserPage';
 import FollowScreen from '../screens/FollowScreen';
+import OperationScreen from '../screens/OperationScreen';
+import StocksCard from './StocksCard';
 
 const Stack = createNativeStackNavigator();
 

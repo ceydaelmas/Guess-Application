@@ -24,6 +24,7 @@ import {CategoryProvider} from './src/context/CategoryContext';
 import {UserProvider} from './src/context/UserContext';
 import {NotificationProvider} from './src/context/NotificationContext';
 import {FavoritesProvider} from './src/context/FavoritesContext';
+import { TransactionProvider } from './src/context/TransactionContext';
 
 const App = () => {
   return (
@@ -33,8 +34,10 @@ const App = () => {
           <MarketProvider>
             <FavoritesProvider>
               <CategoryProvider>
+                <TransactionProvider>
                 <StatusBar backgroundColor="#06bcee" />
                 <Navigation />
+                </TransactionProvider>
               </CategoryProvider>
             </FavoritesProvider>
           </MarketProvider>
