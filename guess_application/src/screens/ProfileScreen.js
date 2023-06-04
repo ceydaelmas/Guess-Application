@@ -15,21 +15,34 @@ import {useUser} from '../context/UserContext';
 import {useAuth} from '../context/AuthContext';
 import {useMarket} from '../context/MarketContext';
 import { useFavorites } from '../context/FavoritesContext';
+import { useTransaction } from '../context/TransactionContext';
 
 const ProfileScreen = ({navigation}) => {
   const {currentUserData} = useUser();
   const {currentUserMarkets} = useMarket();
   const { getFavoritesByUserName} = useFavorites();
+  const {getAllTransactionsByUserName} = useTransaction();
+
   const [userFavorites,setUserFavorites] = useState(null);
+  const [transactions, setTransactions] = useState(null);
+
+  const getFavorites = async () => {
+    const favoritesData = await getFavoritesByUserName(currentUserData.data.userName);
+    setUserFavorites(favoritesData);
+  };
+  const getTransactions = async () => {
+    const transactionsData = await getAllTransactionsByUserName(currentUserData.data.userName);
+    setTransactions(transactionsData);
+  };
 
   useEffect(() => {
-    const getFavorites = async () => {
-      const favoritesData = await getFavoritesByUserName(currentUserData.data.userName);
-      setUserFavorites(favoritesData);
-    };
     getFavorites();
+    console.log("deneme")
   }, [getFavoritesByUserName, currentUserData,userFavorites]);
- 
+
+  useEffect(() => {
+    getTransactions();
+  }, [getAllTransactionsByUserName, currentUserData,transactions]);
 
   if (currentUserData === null) {
     // Yükleniyor durumunu göstermek için.
@@ -178,7 +191,7 @@ const ProfileScreen = ({navigation}) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <ProfileTabView markets={currentUserMarkets} favorites={userFavorites} isCurrentUserPage = {true} />
+      <ProfileTabView markets={currentUserMarkets} favorites={userFavorites} transactions={transactions} isCurrentUserPage = {true} />
     </SafeAreaView>
   );
 };

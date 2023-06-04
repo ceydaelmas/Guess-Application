@@ -5,8 +5,9 @@ import Ionic from 'react-native-vector-icons/Ionicons';
 import MarketCards from './MarketCards';
 import { useMarket } from '../context/MarketContext';
 import FavoritesCard from './FavoritesCard';
+import TransactionCard from './TransactionCard';
 
-const ProfileTabView = ({markets, favorites,isCurrentUserPage}) => {
+const ProfileTabView = ({markets, favorites,isCurrentUserPage ,transactions}) => {
   const Tab = createMaterialTopTabNavigator();
   const Markets = () => {
     return (
@@ -28,25 +29,22 @@ const ProfileTabView = ({markets, favorites,isCurrentUserPage}) => {
       </ScrollView>
     );
   };
-  const Video = () => {
+  const Transaction = () => {
     return (
       <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          width: '100%',
-          height: '100%',
-        }}>
+      showsVerticalScrollIndicator={false}
+      style={{
+        backgroundColor: '#ACB1D6',
+      }}>
         <View
           style={{
-            width: '100%',
-            minHeight:300,
-            backgroundColor: 'white',
-            flexWrap: 'wrap',
-            flexDirection: 'row',
-            paddingVertical: 5,
-            justifyContent: 'space-between',
+            backgroundColor: '#FFF',
+            minHeight:500,
+            flexGrow:1,
+            paddingHorizontal: 25,
+            paddingBottom:100
           }}>
-         
+          <TransactionCard transactions={transactions}/>
         </View>
       </ScrollView>
     );
@@ -90,7 +88,7 @@ const ProfileTabView = ({markets, favorites,isCurrentUserPage}) => {
               Piyasalarım
             </Text>
           ),}} />
-      <Tab.Screen name="Video" component={Video}options={{tabBarLabel: ({focused}) => (
+      <Tab.Screen name="Transaction" component={Transaction} options={{tabBarLabel: ({focused}) => (
             <Text
               style={{
                 color: focused ? '#ACB1D6' : '#748c94',

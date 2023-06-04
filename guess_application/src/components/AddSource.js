@@ -10,7 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const AddSource = ({navigation}) => {
   //source
-  const [stocks, setStocks] = useState(['']);
+  const [sources, setSources] = useState(['']);
   const [errors, setErrors] = useState([]);
   const [focused, setFocused] = useState(false);
 
@@ -20,11 +20,11 @@ const AddSource = ({navigation}) => {
     newErrors.splice(index, 1);
     setErrors(newErrors);
   };
-  const handleAddStock = () => {
-    if (stocks.length < 3) {
-      setStocks([...stocks, '']);
+  const handleAddSources = () => {
+    if (sources.length < 3) {
+      setSources([...sources, '']);
     } else {
-      // validate stocks
+      // validate sources
       const newErrors = [];
       newErrors.push('3"ten fazla kaynak ekleyemezsin.');
 
@@ -39,28 +39,28 @@ const AddSource = ({navigation}) => {
   };
 
   const handleRemoveStock = index => {
-    setStocks([...stocks.slice(0, index), ...stocks.slice(index + 1)]);
+    setSources([...sources.slice(0, index), ...sources.slice(index + 1)]);
   };
 
   const handleInputChange = (index, value) => {
-    setStocks([...stocks.slice(0, index), value, ...stocks.slice(index + 1)]);
+    setSources([...sources.slice(0, index), value, ...sources.slice(index + 1)]);
   };
 
   const handleSubmit = () => {
-    if (stocks.length < 1) {
+    if (sources.length < 1) {
       setErrors(['En az 1 kaynak eklemek zorundasın']);
       return;
     }
 
     // Handle form submission with stock array
-    console.log('Stocks:', stocks);
+    console.log('Sources:', sources);
   };
   return (
     <View style={{maxWidth: 600}}>
       <TouchableOpacity
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        onPress={handleAddStock}
+        onPress={handleAddSources}
         style={[
           {
             marginBottom: Spacing * 2,
@@ -95,7 +95,7 @@ const AddSource = ({navigation}) => {
           {error}
         </Text>
       ))}
-      {stocks.map((stock, index) => (
+      {sources.map((stock, index) => (
         <View
           key={index}
           style={{
@@ -110,7 +110,7 @@ const AddSource = ({navigation}) => {
               placeholder="Kaynak"
             />
           </View>
-          {stocks.length > 1 && (
+          {sources.length > 1 && (
             <TouchableOpacity
               onPress={() => handleRemoveStock(index)}
               style={{marginLeft: 10}}>
@@ -123,8 +123,6 @@ const AddSource = ({navigation}) => {
           )}
         </View>
       ))}
-
-      {/* <Button title="Submit" onPress={handleSubmit} /> */}
     </View>
   );
 };

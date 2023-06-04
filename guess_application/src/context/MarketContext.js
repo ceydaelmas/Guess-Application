@@ -18,7 +18,7 @@ export const MarketProvider = ({children}) => {
 
   useEffect(() => {
     getAllMarketsForCurrentUser();
-  }, [token,marketData]);
+  }, [token]);
 
   const fetchAllMarketData = () => {
     fetch(`${BASE_URL}/Market/get-all-confirmed-markets`, {
@@ -95,34 +95,28 @@ export const MarketProvider = ({children}) => {
         return data;
       });
   };
-  const addMarket = async (marketName, marketDescription, marketEndDate, marketSourceLink, categoryName, marketStockList) => {
-    const marketDetails = {
-      marketName,
-      marketDescription,
-      marketEndDate,
-      marketSourceLink,
-      categoryName,
-      marketStockList
-    };
-    return await axios({
-      method: 'post',
-      url: `${BASE_URL}/Market/add-market`,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      data: marketDetails,
-    })
-      .then(response => {
-        // Yeni oluşturulan marketi mevcut market listesine ekle
-        setMarketData([...marketData, response.data]);
-        return response.data;
-      })
-      .catch(error => {
-        console.log(error);
+  const addMarket = async (market) => {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${BASE_URL}/Market/add-market`,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        data: market
       });
+      
+      if (response.data) {
+        // Burada başarılı olması durumunda yapılacaklar
+        fetchAllMarketData();
+      }
+    } catch (error) {
+      // Burada hata durumunda yapılacaklar
+      console.error('There was an error!', error);
+    }
   };
-
+  
   useEffect(() => {
     setMarketData(marketData); // markets state'inin güncellenmesi
   }, [marketData]);

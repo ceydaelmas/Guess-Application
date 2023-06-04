@@ -54,7 +54,7 @@ const StocksCard = ({stock,market, num}) => {
         </Text>
       </View>
       <ProgressCircle
-        percent={parseFloat(stock.stockRatio).toFixed(0)}
+        percent={parseFloat(stock.stockRatio*100).toFixed(0)}
         radius={20}
         borderWidth={3}
         color="#f58084"
@@ -66,7 +66,7 @@ const StocksCard = ({stock,market, num}) => {
             fontFamily: 'Poppins-Regular',
             fontSize: 15,
           }}>
-          {stock.stockRatio}
+          {parseFloat(stock.stockRatio*100).toFixed(0)}
         </Text>
       </ProgressCircle>
       <TouchableOpacity

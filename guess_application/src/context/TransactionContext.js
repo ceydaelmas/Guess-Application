@@ -13,10 +13,8 @@ export const useTransaction = () => {
 };
 
 export const TransactionProvider = ({children}) => {
-  const [userTransactions, setUserTransactions] = useState([]);
-
   const {token} = useAuth();
-
+  
   const makeTransaction = async (marketId, stockId, transactionAmount) => {
     const transactionDetails = {
       marketId,
@@ -41,11 +39,30 @@ export const TransactionProvider = ({children}) => {
         console.log(error);
       });
   };
-
+  const getAllTransactionsByUserName = async userName => {
+    return await fetch(
+      `${BASE_URL}/Transaction/get-all-transactions-by-user-name?UserName=${userName}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        credentials: 'include',
+      },
+    )
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        return data;
+      });
+  };
   return (
     <TransactionContext.Provider
       value={{
         makeTransaction,
+        getAllTransactionsByUserName,
       }}>
       {children}
     </TransactionContext.Provider>

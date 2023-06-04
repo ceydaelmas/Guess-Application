@@ -9,6 +9,7 @@ import {
   ScrollView,
   FlatList,
   Platform,
+  TouchableNativeFeedback,
 } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -19,8 +20,6 @@ import { useAuth } from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppTextInput from '../components/AppTextInput';
 import Dropdown from '../components/Dropdown';
-
-import AddSource from '../components/AddSource';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useMarket } from '../context/MarketContext';
 const items = [
@@ -31,8 +30,8 @@ const items = [
   {id: 5, name: 'hey'},
 ];
 const AddMarketScreen = ({navigation}) => {
-  const [stockName, setStockName] = useState(null);
-  const [stockDescription, setStockDescription] = useState(null);
+  const [marketName, setMarketName] = useState(null);
+  const [marketDescription, setMarketDescription] = useState(null);
   {
     /* Senet ekleme */
   }
@@ -91,11 +90,83 @@ const AddMarketScreen = ({navigation}) => {
     setTagInput('');
   };
 
+  /*source ekleme*/
+  const [sources, setSources] = useState(['']);
+  const [errors, setErrors] = useState([]);
+  const [focused, setFocused] = useState(false);
+
+  const handleRemoveError = index => {
+    const newErrors = [...errors];
+    newErrors.splice(index, 1);
+    setErrors(newErrors);
+  };
+  const handleAddSources = () => {
+    if (sources.length < 3) {
+      setSources([...sources, '']);
+    } else {
+      // validate sources
+      const newErrors = [];
+      newErrors.push('3"ten fazla kaynak ekleyemezsin.');
+
+      setErrors([...errors, ...newErrors]);
+      // remove errors after 5 seconds
+      newErrors.forEach((_, index) => {
+        setTimeout(() => {
+          handleRemoveError(index);
+        }, 3000);
+      });
+    }
+  };
+
+  const handleRemoveStock = index => {
+    setSources([...sources.slice(0, index), ...sources.slice(index + 1)]);
+  };
+
+  const handleInputChange = (index, value) => {
+    setSources([...sources.slice(0, index), value, ...sources.slice(index + 1)]);
+  };
+
+  //add category
+  const [searchText, setSearchText] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const items = [
+    { id: 1, label: 'Ceydda' },
+    { id: 2, label: 'Arzu' },
+    { id: 3, label: 'Ceylin' },
+    { id: 4, label: 'Aras' },
+    { id: 5, label: 'beliz' },
+    { id: 6, label: 'Arzuhhj' },
+    { id: 7, label: 'Ceylinhjg' },
+    { id: 8, label: 'Arashj' },
+    { id: 9, label: 'belizgj' },
+  ];
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+  const iconName = isOpen ? 'search-outline' : 'ios-chevron-down-outline';
+
+  const handleSearch = (text) => {
+    setSearchText(text);
+  };
+
+  const handleSelect = (item) => {
+    setSelectedItem(item);
+    setIsOpen(false);
+    setSearchText('');
+  };
+
+  const filteredItems = items.filter((item) =>
+    item.label.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+
   return (
     <ScrollView>
       <SafeAreaView>
         <View
           style={{
+            backgroundColor: '#FFF',
             padding: Spacing * 2,
           }}>
           <Spinner visible={isLoading} />
@@ -142,8 +213,8 @@ const AddMarketScreen = ({navigation}) => {
               Piyasa Adı
             </Text>
             <AppTextInput
-              value={stockName}
-              onChangeText={text => setStockName(text)}
+              value={marketName}
+              onChangeText={text => setMarketName(text)}
             />
             {/* Piyasa açıklaması ekleme */}
             <Text
@@ -156,8 +227,8 @@ const AddMarketScreen = ({navigation}) => {
             <AppTextInput
               multiline={true}
               numberOfLines={4}
-              value={stockDescription}
-              onChangeText={text => setStockDescription(text)}
+              value={marketDescription}
+              onChangeText={text => setMarketDescription(text)}
             />
             {/* Kategori ekleme */}
             <Text
@@ -167,7 +238,60 @@ const AddMarketScreen = ({navigation}) => {
               }}>
               Kategoriler
             </Text>
-            <Dropdown />
+            <View style={styles.dropdownContainer}>
+      <TouchableOpacity onPress={toggleDropdown}hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }} >
+        <View
+          style={[
+            styles.touchable,
+            isOpen && styles.dropdownHeaderFocused,
+          ]}
+        >
+          <View style={styles.dropdownHeader}>
+            <AppTextInput
+              style={styles.dropdownHeaderText}
+              onChangeText={handleSearch}
+              placeholder='Kategori Seçiniz'
+              onFocus={() => setIsOpen(true)}
+              onBlur={() => setIsOpen(false)}
+            >
+              {selectedItem ? selectedItem.label : ''}
+            </AppTextInput>
+            <View style={styles.iconContainer}>
+              <Ionicons
+                name={iconName}
+                color={Colors.text}
+                size={Spacing * 2}
+              />
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+      {isOpen && (
+        <ScrollView
+          style={styles.dropdownListContainer}
+          nestedScrollEnabled={true}
+        >
+          <View style={styles.dropdownList}>
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <TouchableNativeFeedback 
+                hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
+                  key={item.id}
+                  onPress={() => handleSelect(item)}
+                  activeOpacity={0.8}
+                >
+                  <View style={styles.dropdownListItem}>
+                    <Text style={styles.dropdownListItemText}>{item.label}</Text>
+                  </View>
+                </TouchableNativeFeedback >
+              ))
+            ) : (
+              <Text style={styles.noResultsText}>No results found.</Text>
+            )}
+          </View>
+        </ScrollView>
+      )}
+    </View>
             {/* Senet ekleme */}
             <Text
               style={{
@@ -229,7 +353,74 @@ const AddMarketScreen = ({navigation}) => {
               }}>
               Kaynaklar
             </Text>
-            <AddSource></AddSource>
+            <View style={{maxWidth: 600}}>
+      <TouchableOpacity
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        onPress={handleAddSources}
+        style={[
+          {
+            marginBottom: Spacing * 2,
+            borderRadius: Spacing,
+            borderStyle: 'dashed',
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: Spacing,
+          },
+          focused && {
+            borderWidth: 2,
+            borderColor: Colors.primary,
+            shadowOffset: {width: 4, height: Spacing},
+            shadowColor: Colors.primary,
+            shadowOpacity: 0.2,
+            elevation: 12,
+            shadowRadius: Spacing,
+          },
+        ]}>
+        <Text
+          style={{
+            fontFamily: 'Poppins-Regular',
+            textAlign: 'center',
+            color: '#999',
+            fontSize: 20,
+          }}>
+          + Kaynak Ekle
+        </Text>
+      </TouchableOpacity>
+      {errors.map((error, index) => (
+        <Text key={index} style={{color: 'red', marginTop: 10}}>
+          {error}
+        </Text>
+      ))}
+      {sources.map((stock, index) => (
+        <View
+          key={index}
+          style={{
+            marginBottom: 10,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <View style={{flex: 1, marginBottom: -20}}>
+            <AppTextInput
+              value={stock}
+              onChangeText={value => handleInputChange(index, value)}
+              placeholder="Kaynak"
+            />
+          </View>
+          {sources.length > 1 && (
+            <TouchableOpacity
+              onPress={() => handleRemoveStock(index)}
+              style={{marginLeft: 10}}>
+              <Ionicons
+                name="remove-circle-outline"
+                color="#999"
+                size={Spacing * 2}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      ))}
+    </View>
             {/* Piyasa kapanış tarihi ekleme */}
             <Text
               style={{
@@ -306,8 +497,15 @@ const AddMarketScreen = ({navigation}) => {
               elevation: 12,
             }}
             onPress={() => {
-              login(email, password, navigation);
-            }}>
+              addMarket({
+                  marketName, 
+                  marketDescription, 
+                  marketEndDate: new Date(`${textDate} ${textTime}`).toISOString(),  
+                  marketSourceLink: sources, 
+                  categoryName: selectedItem.label, 
+                  marketStockList: tags
+              });
+          }}>
             <Text
               style={{
                 fontFamily: 'Poppins-SemiBold',
@@ -323,9 +521,6 @@ const AddMarketScreen = ({navigation}) => {
     </ScrollView>
   );
 };
-
-export default AddMarketScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -333,4 +528,95 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#8fcbbc',
   },
-});
+  dropdownContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+  touchable: {
+    width: '100%',
+  },
+  dropdownHeader: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
+    padding: 10,
+    fontFamily: 'Poppins-Regular',
+    fontSize: FontSize.small,
+    backgroundColor: Colors.lightPrimary,
+    borderRadius: Spacing,
+  },
+  dropdownHeaderFocused: {
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    shadowOffset: { width: 4, height: Spacing },
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.2,
+    elevation:12,
+    shadowRadius: Spacing,
+    borderRadius: Spacing,
+  },
+  dropdownHeaderText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: FontSize.small,
+    color: '#333',
+    flex: 0.6, 
+    padding: 10, 
+},
+  iconContainer: {
+    width: 20,
+    height: 20,
+    right:20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dropdownListContainer: {
+    position: 'relative',
+    left: 0,
+    right: 0,
+    zIndex: 999,
+    backgroundColor: '#FFF',
+    borderWidth: 1,
+    borderColor: '#CCC',
+    borderRadius: Spacing,
+    paddingTop: 5,
+    maxHeight:130,
+    
+  },
+    searchContainer: {
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    },
+    searchInput: {
+    borderWidth: 1,
+    borderColor: '#CCC',
+    borderRadius: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    },
+    dropdownList: {
+    paddingVertical: 5,
+    
+    },
+    dropdownListItem: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  
+    },
+    dropdownListItemText: {
+    fontFamily: 'Poppins-Regular',
+    color: '#333',
+    paddingHorizontal: 10,
+    fontSize: FontSize.small,
+   
+    },
+    noResultsText: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontStyle: 'italic',
+    color: '#CCC',
+    },
+    });
+    
+    export default AddMarketScreen;

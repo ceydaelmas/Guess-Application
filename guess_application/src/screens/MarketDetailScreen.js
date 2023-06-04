@@ -56,10 +56,11 @@ const MarketDetailScreen = ({navigation}) => {
 const toggleFavorite = async () => {
   if(isFavorite){
     const removed = await removeMarketFromFavorites(marketId);
+    getFavoritesByUserName(currentUserData.data.userName);
     if(removed){
       setIsFavorite(false);
     }
-  }else{
+  } else{
     const added = await addMarketToFavorites(marketId);
     if(added.succeeded){
       setIsFavorite(true);
