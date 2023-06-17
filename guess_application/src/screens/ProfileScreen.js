@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -26,23 +26,22 @@ const ProfileScreen = ({navigation}) => {
   const [userFavorites,setUserFavorites] = useState(null);
   const [transactions, setTransactions] = useState(null);
 
-  const getFavorites = async () => {
+  const getFavorites = useCallback(async () => {
     const favoritesData = await getFavoritesByUserName(currentUserData.data.userName);
     setUserFavorites(favoritesData);
-  };
-  const getTransactions = async () => {
+}, [getFavoritesByUserName, currentUserData.data.userName]); 
+  const getTransactions =  useCallback(async () => {
     const transactionsData = await getAllTransactionsByUserName(currentUserData.data.userName);
     setTransactions(transactionsData);
-  };
-
+  }, [getAllTransactionsByUserName, currentUserData.data.userName]);
   useEffect(() => {
     getFavorites();
     console.log("deneme")
-  }, [getFavoritesByUserName, currentUserData,userFavorites]);
+}, [getFavorites]); 
 
   useEffect(() => {
     getTransactions();
-  }, [getAllTransactionsByUserName, currentUserData,transactions]);
+  }, [ currentUserData]);
 
   if (currentUserData === null) {
     // Yükleniyor durumunu göstermek için.

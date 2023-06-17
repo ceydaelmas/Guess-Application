@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useCallback, useEffect, useState} from 'react';
 import {BASE_URL} from '../config';
 import * as SecureStore from 'expo-secure-store';
 import {useContext} from 'react';
@@ -14,10 +14,6 @@ export function UserProvider({children}) {
   const [currentUserData, setCurrentUserData] = useState([]);
   const [otherUserData, setOtherUserData] = useState([]);
   const {token} = useAuth();
-
-  useEffect(() => {
-    getCurrentUserData();
-  }, [token]);
 
   const fetchOtherUserByUserName = async userName => {
     return await fetch(
@@ -37,7 +33,7 @@ export function UserProvider({children}) {
         return data;
       });
   };
-  const getCurrentUserData = async () => {
+  const getCurrentUserData = useCallback(async () => {
     return await fetch(`${BASE_URL}/User/get-current-user-info`, {
       method: 'GET',
       headers: {
@@ -51,11 +47,14 @@ export function UserProvider({children}) {
       })
       .then(data => {
         setCurrentUserData(data);
-        console.log('currentuser', currentUserData);
+        console.log('currentuser', data); // <-- burada data kullanarak log atabilirsiniz.
         return data;
       });
-  };
+  }, [token]); // <-- token değiştiğinde getCurrentUserData güncellenecek.
 
+  useEffect(() => {
+    getCurrentUserData();
+  }, [getCurrentUserData]);
   const getAllFollowers = async userName => {
     const response = await fetch(
       `${BASE_URL}/User/get-all-followers?UserName=${userName}`,
@@ -68,7 +67,7 @@ export function UserProvider({children}) {
         credentials: 'include',
       },
     );
-  
+
     const data = await response.json();
     return data;
   };
@@ -85,7 +84,7 @@ export function UserProvider({children}) {
         credentials: 'include',
       },
     );
-    console.log("context içindeyim", data);
+    console.log('context içindeyim', data);
     const data = await response.json();
     return data;
   };
@@ -127,7 +126,7 @@ export function UserProvider({children}) {
         followUser,
         unfollowUser,
         getAllFollowers,
-        getAllFollowing
+        getAllFollowing,
       }}>
       {children}
     </UserContext.Provider>

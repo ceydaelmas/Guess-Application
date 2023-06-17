@@ -16,19 +16,14 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Colors from '../constants/Colors';
 import FontSize from '../constants/FontSize';
 import Spacing from '../constants/Spacing';
-import { useAuth } from '../context/AuthContext';
+import {useAuth} from '../context/AuthContext';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AppTextInput from '../components/AppTextInput';
 import Dropdown from '../components/Dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useMarket } from '../context/MarketContext';
-const items = [
-  {id: 1, name: 'Ceyda'},
-  {id: 2, name: 'ARzu'},
-  {id: 3, name: 'aras'},
-  {id: 4, name: 'ceylin'},
-  {id: 5, name: 'hey'},
-];
+import {useMarket} from '../context/MarketContext';
+import {useCategory} from '../context/CategoryContext';
+
 const AddMarketScreen = ({navigation}) => {
   const [marketName, setMarketName] = useState(null);
   const [marketDescription, setMarketDescription] = useState(null);
@@ -48,6 +43,7 @@ const AddMarketScreen = ({navigation}) => {
   const currentDate = new Date();
   const {isLoading} = useAuth();
   const {addMarket} = useMarket();
+  const {categoryData} = useCategory();
 
   {
     /* Piyasa kapanma tarihi ekleme */
@@ -94,6 +90,7 @@ const AddMarketScreen = ({navigation}) => {
   const [sources, setSources] = useState(['']);
   const [errors, setErrors] = useState([]);
   const [focused, setFocused] = useState(false);
+  const {format} = require('date-fns');
 
   const handleRemoveError = index => {
     const newErrors = [...errors];
@@ -123,43 +120,38 @@ const AddMarketScreen = ({navigation}) => {
   };
 
   const handleInputChange = (index, value) => {
-    setSources([...sources.slice(0, index), value, ...sources.slice(index + 1)]);
+    setSources([
+      ...sources.slice(0, index),
+      value,
+      ...sources.slice(index + 1),
+    ]);
   };
 
   //add category
   const [searchText, setSearchText] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const items = [
-    { id: 1, label: 'Ceydda' },
-    { id: 2, label: 'Arzu' },
-    { id: 3, label: 'Ceylin' },
-    { id: 4, label: 'Aras' },
-    { id: 5, label: 'beliz' },
-    { id: 6, label: 'Arzuhhj' },
-    { id: 7, label: 'Ceylinhjg' },
-    { id: 8, label: 'Arashj' },
-    { id: 9, label: 'belizgj' },
-  ];
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
   const iconName = isOpen ? 'search-outline' : 'ios-chevron-down-outline';
 
-  const handleSearch = (text) => {
+  const handleSearch = text => {
     setSearchText(text);
   };
 
-  const handleSelect = (item) => {
+  const handleSelect = item => {
     setSelectedItem(item);
     setIsOpen(false);
     setSearchText('');
   };
 
-  const filteredItems = items.filter((item) =>
-    item.label.toLowerCase().includes(searchText.toLowerCase())
+  const filteredItems = categoryData.filter(
+    (item, index) =>
+      index !== 0 &&
+      item.categoryName.toLowerCase().includes(searchText.toLowerCase()),
   );
-
 
   return (
     <ScrollView>
@@ -174,22 +166,21 @@ const AddMarketScreen = ({navigation}) => {
             style={{
               alignItems: 'flex-start',
             }}>
-                <TouchableOpacity
-              onPress={() => navigation.goBack()}>
-             <Ionicons
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons
                 name="ios-arrow-back-sharp"
                 color="#1D267D"
                 size={Spacing * 3}
               />
             </TouchableOpacity>
-               
+
             <Text
               style={{
                 fontSize: FontSize.xLarge,
                 color: Colors.text,
                 fontFamily: 'Poppins-Bold',
-                marginTop:8,
-                marginBottom:Spacing*2,
+                marginTop: 8,
+                marginBottom: Spacing * 2,
               }}>
               Piyasa Oluştur
             </Text>
@@ -239,59 +230,61 @@ const AddMarketScreen = ({navigation}) => {
               Kategoriler
             </Text>
             <View style={styles.dropdownContainer}>
-      <TouchableOpacity onPress={toggleDropdown}hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }} >
-        <View
-          style={[
-            styles.touchable,
-            isOpen && styles.dropdownHeaderFocused,
-          ]}
-        >
-          <View style={styles.dropdownHeader}>
-            <AppTextInput
-              style={styles.dropdownHeaderText}
-              onChangeText={handleSearch}
-              placeholder='Kategori Seçiniz'
-              onFocus={() => setIsOpen(true)}
-              onBlur={() => setIsOpen(false)}
-            >
-              {selectedItem ? selectedItem.label : ''}
-            </AppTextInput>
-            <View style={styles.iconContainer}>
-              <Ionicons
-                name={iconName}
-                color={Colors.text}
-                size={Spacing * 2}
-              />
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-      {isOpen && (
-        <ScrollView
-          style={styles.dropdownListContainer}
-          nestedScrollEnabled={true}
-        >
-          <View style={styles.dropdownList}>
-            {filteredItems.length > 0 ? (
-              filteredItems.map((item) => (
-                <TouchableNativeFeedback 
-                hitSlop={{ top: 30, bottom: 30, left: 30, right: 30 }}
-                  key={item.id}
-                  onPress={() => handleSelect(item)}
-                  activeOpacity={0.8}
-                >
-                  <View style={styles.dropdownListItem}>
-                    <Text style={styles.dropdownListItemText}>{item.label}</Text>
+              <TouchableOpacity
+                onPress={toggleDropdown}
+                hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}>
+                <View
+                  style={[
+                    styles.touchable,
+                    isOpen && styles.dropdownHeaderFocused,
+                  ]}>
+                  <View style={styles.dropdownHeader}>
+                    <AppTextInput
+                      style={styles.dropdownHeaderText}
+                      onChangeText={handleSearch}
+                      placeholder="Kategori Seçiniz"
+                      onFocus={() => setIsOpen(true)}
+                      onBlur={() => setIsOpen(false)}>
+                      {selectedItem ? selectedItem.categoryName : ''}
+                    </AppTextInput>
+                    <View style={styles.iconContainer}>
+                      <Ionicons
+                        name={iconName}
+                        color={Colors.text}
+                        size={Spacing * 2}
+                      />
+                    </View>
                   </View>
-                </TouchableNativeFeedback >
-              ))
-            ) : (
-              <Text style={styles.noResultsText}>No results found.</Text>
-            )}
-          </View>
-        </ScrollView>
-      )}
-    </View>
+                </View>
+              </TouchableOpacity>
+              {isOpen && (
+                <ScrollView
+                  style={styles.dropdownListContainer}
+                  nestedScrollEnabled={true}>
+                  <View style={styles.dropdownList}>
+                    {filteredItems.length > 0 ? (
+                      filteredItems.map(item => (
+                        <TouchableNativeFeedback
+                          hitSlop={{top: 30, bottom: 30, left: 30, right: 30}}
+                          key={item.id}
+                          onPress={() => handleSelect(item)}
+                          activeOpacity={0.8}>
+                          <View style={styles.dropdownListItem}>
+                            <Text style={styles.dropdownListItemText}>
+                              {item.categoryName}
+                            </Text>
+                          </View>
+                        </TouchableNativeFeedback>
+                      ))
+                    ) : (
+                      <Text style={styles.noResultsText}>
+                        No results found.
+                      </Text>
+                    )}
+                  </View>
+                </ScrollView>
+              )}
+            </View>
             {/* Senet ekleme */}
             <Text
               style={{
@@ -328,22 +321,28 @@ const AddMarketScreen = ({navigation}) => {
               ))}
             </View>
             <View
-          style={{
-            marginBottom: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-            <View style={{flex: 1, marginBottom: -20}}>
-              <AppTextInput
-                value={tagInput}
-                onChangeText={setTagInput}
-                onSubmitEditing={addTag}
-                placeholder="Senet Ekle"
-              />
-            </View>
-            <TouchableOpacity onPress={addTag} style={{marginLeft:10, marginTop:10}}>
-              <Ionicons name="add-circle-outline" color='#999' size={Spacing * 2} />
-            </TouchableOpacity>
+              style={{
+                marginBottom: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View style={{flex: 1, marginBottom: -20}}>
+                <AppTextInput
+                  value={tagInput}
+                  onChangeText={setTagInput}
+                  onSubmitEditing={addTag}
+                  placeholder="Senet Ekle"
+                />
+              </View>
+              <TouchableOpacity
+                onPress={addTag}
+                style={{marginLeft: 10, marginTop: 10}}>
+                <Ionicons
+                  name="add-circle-outline"
+                  color="#999"
+                  size={Spacing * 2}
+                />
+              </TouchableOpacity>
             </View>
             {/* Piyasa kaynağı ekleme */}
             <Text
@@ -354,73 +353,73 @@ const AddMarketScreen = ({navigation}) => {
               Kaynaklar
             </Text>
             <View style={{maxWidth: 600}}>
-      <TouchableOpacity
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        onPress={handleAddSources}
-        style={[
-          {
-            marginBottom: Spacing * 2,
-            borderRadius: Spacing,
-            borderStyle: 'dashed',
-            borderWidth: 1,
-            borderColor: '#ccc',
-            padding: Spacing,
-          },
-          focused && {
-            borderWidth: 2,
-            borderColor: Colors.primary,
-            shadowOffset: {width: 4, height: Spacing},
-            shadowColor: Colors.primary,
-            shadowOpacity: 0.2,
-            elevation: 12,
-            shadowRadius: Spacing,
-          },
-        ]}>
-        <Text
-          style={{
-            fontFamily: 'Poppins-Regular',
-            textAlign: 'center',
-            color: '#999',
-            fontSize: 20,
-          }}>
-          + Kaynak Ekle
-        </Text>
-      </TouchableOpacity>
-      {errors.map((error, index) => (
-        <Text key={index} style={{color: 'red', marginTop: 10}}>
-          {error}
-        </Text>
-      ))}
-      {sources.map((stock, index) => (
-        <View
-          key={index}
-          style={{
-            marginBottom: 10,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <View style={{flex: 1, marginBottom: -20}}>
-            <AppTextInput
-              value={stock}
-              onChangeText={value => handleInputChange(index, value)}
-              placeholder="Kaynak"
-            />
-          </View>
-          {sources.length > 1 && (
-            <TouchableOpacity
-              onPress={() => handleRemoveStock(index)}
-              style={{marginLeft: 10}}>
-              <Ionicons
-                name="remove-circle-outline"
-                color="#999"
-                size={Spacing * 2}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-      ))}
-    </View>
+              <TouchableOpacity
+                onFocus={() => setFocused(true)}
+                onBlur={() => setFocused(false)}
+                onPress={handleAddSources}
+                style={[
+                  {
+                    marginBottom: Spacing * 2,
+                    borderRadius: Spacing,
+                    borderStyle: 'dashed',
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    padding: Spacing,
+                  },
+                  focused && {
+                    borderWidth: 2,
+                    borderColor: Colors.primary,
+                    shadowOffset: {width: 4, height: Spacing},
+                    shadowColor: Colors.primary,
+                    shadowOpacity: 0.2,
+                    elevation: 12,
+                    shadowRadius: Spacing,
+                  },
+                ]}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    textAlign: 'center',
+                    color: '#999',
+                    fontSize: 20,
+                  }}>
+                  + Kaynak Ekle
+                </Text>
+              </TouchableOpacity>
+              {errors.map((error, index) => (
+                <Text key={index} style={{color: 'red', marginTop: 10}}>
+                  {error}
+                </Text>
+              ))}
+              {sources.map((stock, index) => (
+                <View
+                  key={index}
+                  style={{
+                    marginBottom: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <View style={{flex: 1, marginBottom: -20}}>
+                    <AppTextInput
+                      value={stock}
+                      onChangeText={value => handleInputChange(index, value)}
+                      placeholder="Kaynak"
+                    />
+                  </View>
+                  {sources.length > 1 && (
+                    <TouchableOpacity
+                      onPress={() => handleRemoveStock(index)}
+                      style={{marginLeft: 10}}>
+                      <Ionicons
+                        name="remove-circle-outline"
+                        color="#999"
+                        size={Spacing * 2}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              ))}
+            </View>
             {/* Piyasa kapanış tarihi ekleme */}
             <Text
               style={{
@@ -497,15 +496,23 @@ const AddMarketScreen = ({navigation}) => {
               elevation: 12,
             }}
             onPress={() => {
+              let dateParts = textDate.split('/');
+              let formattedDate = `${dateParts[2]}-${dateParts[1].padStart(
+                2,
+                '0',
+              )}-${dateParts[0].padStart(2, '0')}T${textTime.padStart(
+                5,
+                '0',
+              )}:00.000Z`;
               addMarket({
-                  marketName, 
-                  marketDescription, 
-                  marketEndDate: new Date(`${textDate} ${textTime}`).toISOString(),  
-                  marketSourceLink: sources, 
-                  categoryName: selectedItem.label, 
-                  marketStockList: tags
+                marketName,
+                marketDescription,
+                marketEndDate: formattedDate,
+                marketSourceLink: sources,
+                categoryName: selectedItem.categoryName,
+                marketStockList: tags,
               });
-          }}>
+            }}>
             <Text
               style={{
                 fontFamily: 'Poppins-SemiBold',
@@ -550,10 +557,10 @@ const styles = StyleSheet.create({
   dropdownHeaderFocused: {
     borderWidth: 2,
     borderColor: Colors.primary,
-    shadowOffset: { width: 4, height: Spacing },
+    shadowOffset: {width: 4, height: Spacing},
     shadowColor: Colors.primary,
     shadowOpacity: 0.2,
-    elevation:12,
+    elevation: 12,
     shadowRadius: Spacing,
     borderRadius: Spacing,
   },
@@ -561,13 +568,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: FontSize.small,
     color: '#333',
-    flex: 0.6, 
-    padding: 10, 
-},
+    flex: 0.6,
+    padding: 10,
+  },
   iconContainer: {
     width: 20,
     height: 20,
-    right:20,
+    right: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -581,42 +588,38 @@ const styles = StyleSheet.create({
     borderColor: '#CCC',
     borderRadius: Spacing,
     paddingTop: 5,
-    maxHeight:130,
-    
+    maxHeight: 130,
   },
-    searchContainer: {
+  searchContainer: {
     paddingHorizontal: 10,
     paddingBottom: 10,
-    },
-    searchInput: {
+  },
+  searchInput: {
     borderWidth: 1,
     borderColor: '#CCC',
     borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    },
-    dropdownList: {
+  },
+  dropdownList: {
     paddingVertical: 5,
-    
-    },
-    dropdownListItem: {
+  },
+  dropdownListItem: {
     paddingHorizontal: 10,
     paddingVertical: 8,
-  
-    },
-    dropdownListItemText: {
+  },
+  dropdownListItemText: {
     fontFamily: 'Poppins-Regular',
     color: '#333',
     paddingHorizontal: 10,
     fontSize: FontSize.small,
-   
-    },
-    noResultsText: {
+  },
+  noResultsText: {
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontStyle: 'italic',
     color: '#CCC',
-    },
-    });
-    
-    export default AddMarketScreen;
+  },
+});
+
+export default AddMarketScreen;

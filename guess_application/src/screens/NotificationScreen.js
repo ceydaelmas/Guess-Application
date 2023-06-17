@@ -37,8 +37,9 @@ const NotificationScreen = ({navigation}) => {
       </Text>
 
       <View>
-        {formattedNotificationData.map(item => (
+        {formattedNotificationData.map((item, index) => (
           <View
+            key={index}
             style={{
               flexDirection: 'row',
               backgroundColor:'#EEF1FF',

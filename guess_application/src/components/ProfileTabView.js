@@ -7,7 +7,7 @@ import { useMarket } from '../context/MarketContext';
 import FavoritesCard from './FavoritesCard';
 import TransactionCard from './TransactionCard';
 
-const ProfileTabView = ({markets, favorites,isCurrentUserPage ,transactions}) => {
+const ProfileTabView = React.memo(({markets, favorites,isCurrentUserPage ,transactions}) => {
   const Tab = createMaterialTopTabNavigator();
   const Markets = () => {
     return (
@@ -44,7 +44,7 @@ const ProfileTabView = ({markets, favorites,isCurrentUserPage ,transactions}) =>
             paddingHorizontal: 25,
             paddingBottom:100
           }}>
-          <TransactionCard transactions={transactions}/>
+          <TransactionCard transactions={transactions} isCurrentUserPage = {isCurrentUserPage}/>
         </View>
       </ScrollView>
     );
@@ -110,6 +110,6 @@ const ProfileTabView = ({markets, favorites,isCurrentUserPage ,transactions}) =>
           ),}} />
     </Tab.Navigator>
   );
-};
+});
 
 export default ProfileTabView;

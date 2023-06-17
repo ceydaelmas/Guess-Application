@@ -8,6 +8,7 @@ import {
   Image,
   FlatList,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 
 import { useState, useEffect } from 'react';
@@ -27,19 +28,50 @@ const HomeScreen = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [markets, setMarkets] = useState(marketData);
   const { logout } = useAuth();
+  
   const handleLogout = () => {
       logout();
     };
-  useEffect(() => {
-    setMarkets(marketData);
-  }, [marketData]);
 
+  useEffect(() => {
+    const initialCategory = categoryData.find(category => category.categoryName === "Tümü");
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [categoryData]);
   function onSelectCategory(category) {
     let marketList = marketData.filter(market => market.categoryName === category.categoryName);
     setMarkets(marketList);
     setSelectedCategory(category);
     if (category.categoryName === "Tümü") {
       setMarkets(marketData);
+    }
+  }
+  useEffect(() => {
+    if (selectedCategory && selectedCategory.categoryName === "Tümü") {
+      setMarkets(marketData);
+    } else if (selectedCategory) {
+      let marketList = marketData.filter(market => market.categoryName === selectedCategory.categoryName);
+      setMarkets(marketList);
+    }
+  }, [marketData, selectedCategory]);
+  function renderContent() {
+    // Verilerin yüklenip yüklenmediğini kontrol et
+    if (categoryData && marketData && categoryData.length > 0 && marketData.length > 0) {
+      // Eğer veriler yüklendiyse, içerikleri render et
+      return (
+        <View>
+          {renderMainCategories()}
+          {renderMarketList()}
+        </View>
+      );
+    } else {
+      // Eğer veriler yüklenmediyse, Activity Indicator'i render et
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#ACB1D6" />
+        </View>
+      );
     }
   }
   function renderHeader(){
@@ -273,18 +305,17 @@ const HomeScreen = ({ navigation }) => {
       }}>
       {renderHeader()}
       <View
-        style={{
-          backgroundColor: '#FFF',
-          borderTopLeftRadius: 40,
-          borderTopRightRadius: 40,
-          minHeight:500,
-          flexGrow:1,
-          paddingHorizontal: 25,
-          paddingBottom:100
-        }}>
-        {renderMainCategories()}
-        {renderMarketList()}
-      </View>
+      style={{
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        minHeight:500,
+        flexGrow:1,
+        paddingHorizontal: 25,
+        paddingBottom:100
+      }}>
+      {renderContent()}
+    </View>
     </ScrollView>
   );
 };

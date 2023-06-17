@@ -42,8 +42,9 @@ const FavoritesCard = ({favorites, isCurrentUserPage}) => {
 
   return (
     <View>
-      {favorites?.data.map(item => (
+      {favorites?.data.map((item, index) => (
         <View
+          key={index}
           style={{
             flexDirection: 'row',
             backgroundColor: '#F6F1F1',
