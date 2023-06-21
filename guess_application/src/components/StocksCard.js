@@ -4,7 +4,7 @@ import ProgressCircle from 'react-native-progress-circle';
 import Colors from '../constants/Colors';
 import OperationScreen from '../screens/OperationScreen';
 
-const StocksCard = ({stock,market, num}) => {
+const StocksCard = ({stock,market, num,setMarket}) => {
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -88,7 +88,7 @@ const StocksCard = ({stock,market, num}) => {
           İşlem yap
         </Text>
       </TouchableOpacity>
-      <OperationScreen stock={stock} market={market} show={showPopup}  // Pass the state variable to the OperationScreen component
+      <OperationScreen stock={stock} market={market} setMarket = {setMarket} show={showPopup}  // Pass the state variable to the OperationScreen component
         onHide={onClosePopup}/>
     </View>
   );

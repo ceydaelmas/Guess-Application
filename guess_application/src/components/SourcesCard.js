@@ -15,7 +15,7 @@ const SourcesCard = ({source, num}) => {
       }}>
       <View
         style={{
-          paddingVertical: 5,
+          paddingVertical: 15,
           paddingHorizontal: 10,
         }}>
         <Ionicons name="ios-link-outline" color="#FFF" size={30} />
@@ -27,7 +27,7 @@ const SourcesCard = ({source, num}) => {
             fontFamily: 'Poppins-Regular',
             fontSize: 20,
             paddingLeft: 10,
-            width: '100%',
+            width: '80%',
           }}>
           {source}
         </Text>

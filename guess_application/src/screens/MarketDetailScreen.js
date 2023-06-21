@@ -30,6 +30,8 @@ const MarketDetailScreen = ({navigation}) => {
   const { getFavoritesByUserName, addMarketToFavorites, removeMarketFromFavorites } = useFavorites();
   const [isFavorite, setIsFavorite] = useState(false);
   
+
+
   useEffect(() => {
     const getMarket = async () => {
       const marketData = await fetchMarketById(marketId);
@@ -205,7 +207,7 @@ const toggleFavorite = async () => {
                 fontFamily: 'Poppins-Regular',
                 
               }}>
-              {`Bitiş Zamanı:   ${market.formattedEndDate} , ${market.formattedEndTime}`}  
+              {`Bitiş Zamanı:  2023-06-21 `}  
             </Text>
           </View>
       <Text
@@ -215,14 +217,14 @@ const toggleFavorite = async () => {
           fontSize: 20,
           marginHorizontal:20,
           marginTop:13,
-          width: '100%',
+          width: '90%',
         }}>
         {market.marketDescription}
       </Text>
       
       {market.marketStockList.map((stock, index) => (
       <View>
-         <StocksCard stock={stock} market={market} num={index} navigation={navigation} />
+         <StocksCard stock={stock} market={market} setMarket = {setMarket} num={index} navigation={navigation} />
       </View>
         ))}
      
@@ -237,9 +239,9 @@ const toggleFavorite = async () => {
           width: '100%',
         }}>
         Kaynaklar :
-      </Text>
+      </Text >
       {market.marketSourceLink.map((source, index) => (
-      <View>
+      <View >
          <SourcesCard source={source} num={index} />
       </View>
         ))}

@@ -3,28 +3,35 @@ import { TouchableOpacity, View, Modal, Dimensions, TouchableWithoutFeedback, Al
 import { Text } from 'react-native-elements';
 import NumericInput from 'react-native-numeric-input';
 import { useTransaction } from '../context/TransactionContext';
+import { useMarket } from '../context/MarketContext';
 
 const deviceHeight = Dimensions.get('window').height;
 
-const OperationScreen = ({ stock, market, show, onHide }) => {
+const OperationScreen = ({ stock, market, setMarket ,show, onHide }) => {
   const [value, setValue] = useState(1);
   const [totalCoin, setTotalCoin] = useState(parseFloat(stock.stockPrice).toFixed(0));
   const [loading, setLoading] = useState(false);
+  const {fetchMarketById} = useMarket();
 
   const { makeTransaction } = useTransaction();
 
   const makeTransactionHandler = async () => {
     try {
-      setLoading(true); // Yükleniciyi etkinleştir
+      setLoading(true);
       const response = await makeTransaction(market.marketId, stock.id, value);
       Alert.alert('Transaction Successful', response.message);
-      onHide(); // Modalı gizle
+      
+      const updatedMarket = await fetchMarketById(market.marketId);
+      setMarket(updatedMarket); // market state'ini güncelle
+
+      onHide();
     } catch (error) {
       Alert.alert('Transaction Failed', error.message);
     } finally {
-      setLoading(false); // Yükleniciyi devre dışı bırak
+      setLoading(false);
     }
   };
+
 
   return (
     <Modal
